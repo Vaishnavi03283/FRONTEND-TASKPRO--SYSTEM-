@@ -1,0 +1,47 @@
+/* HUMANS.TXT - TaskHub */
+
+/* TEAM */
+    Frontend Development: Your Team Name
+    Backend Development: Your Team Name
+    UI/UX Design: Your Team Name
+    Project Management: Your Team Name
+
+/* THANKS */
+    React Team: https://reactjs.org/
+    Vite Team: https://vitejs.dev/
+    Open Source Community: https://github.com/
+
+/* SITE */
+    Last updated: 2024-01-01
+    Standards: HTML5, CSS3, ES6+
+    Components: React 18+
+    Build Tool: Vite
+    CSS Framework: Custom CSS with CSS Variables
+    Icons: Custom SVG Icons
+
+/* CONTACT */
+    Website: https://yourdomain.com
+    Email: contact@yourdomain.com
+    GitHub: https://github.com/yourusername/taskhub
+    Twitter: @yourusername
+
+/* TECHNOLOGY STACK */
+    Frontend: React 18+, React Router, Axios
+    Backend: Node.js, Express, MongoDB
+    Build: Vite, ESLint, Prettier
+    Deployment: Docker, CI/CD Pipeline
+
+/* PERFORMANCE */
+    Lighthouse Score: 95+
+    Core Web Vitals: Optimized
+    Bundle Size: < 500KB (gzipped)
+    Load Time: < 2 seconds
+
+/* ACCESSIBILITY */
+    WCAG 2.1: AA compliant
+    Screen Reader: Compatible
+    Keyboard Navigation: Full support
+    Color Contrast: WCAG compliant
+
+/* LICENSE */
+    MIT License - https://opensource.org/licenses/MIT

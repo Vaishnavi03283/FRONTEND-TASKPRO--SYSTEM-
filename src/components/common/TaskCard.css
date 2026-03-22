@@ -1,0 +1,16 @@
+.task-card {
+  background: #fff;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+.priority.HIGH { color: red; }
+.priority.MEDIUM { color: orange; }
+.priority.LOW { color: green; }
+
+.actions {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+}

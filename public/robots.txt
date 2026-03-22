@@ -1,0 +1,29 @@
+# robots.txt for TaskHub
+
+# Allow all crawlers to access the site
+User-agent: *
+Allow: /
+
+# Disallow access to admin areas
+User-agent: *
+Disallow: /admin/
+Disallow: /api/admin/
+
+# Disallow access to sensitive endpoints
+User-agent: *
+Disallow: /api/auth/
+Disallow: /api/users/
+Disallow: /api/projects/*/delete
+Disallow: /api/tasks/*/delete
+
+# Allow specific API endpoints for public data
+User-agent: *
+Allow: /api/projects
+Allow: /api/tasks
+Allow: /api/public
+
+# Sitemap location
+Sitemap: https://yourdomain.com/sitemap.xml
+
+# Crawl delay (optional, prevents overwhelming the server)
+Crawl-delay: 1

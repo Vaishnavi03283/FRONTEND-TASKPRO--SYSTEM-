@@ -1,0 +1,30 @@
+/* Layout.module.css - Production Ready Styling */
+
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.main {
+  flex: 1;
+  margin-left: 250px;
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  flex: 1;
+  padding: 2rem;
+  background: #f8fafc;
+  min-height: calc(100vh - 73px);
+}
+
+@media (max-width: 768px) {
+  .main {
+    margin-left: 0;
+  }
+  
+  .content {
+    padding: 1rem;
+  }
+}
