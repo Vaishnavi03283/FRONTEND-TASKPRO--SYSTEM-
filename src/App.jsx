@@ -1,3 +1,5 @@
+import './styles/design-tokens.css';
+import './styles/global.css';
 import './App.css';
 import { AuthProvider } from "./context/AuthContext";
 import { ProjectProvider } from "./context/ProjectContext";

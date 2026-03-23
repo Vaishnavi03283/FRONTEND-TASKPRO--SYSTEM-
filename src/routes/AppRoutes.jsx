@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, Outlet } from "react-router-dom";
 import Login from "../pages/Auth/Login";
 import Register from "../pages/Auth/Register";
 import ChangePassword from "../pages/Auth/ChangePassword";
@@ -38,7 +38,7 @@ const AppRoutes = () => {
       <Route path="/unauthorized" element={<Unauthorized />} />
       
       {/* ✅ PROTECTED ROUTES WITH LAYOUT */}
-      <Route path="/" element={<PrivateRoute><Layout /></PrivateRoute>}>
+      <Route path="/" element={<PrivateRoute><Layout><Outlet /></Layout></PrivateRoute>}>
         
         {/* USER ROUTES */}
         <Route path="dashboard/user" element={
