@@ -1,7 +1,7 @@
-/* Login.module.css - Modern Design Based on Image Reference */
+/* Register.module.css - Modern Design Based on Image Reference */
 
 /* Page Layout */
-.loginPage {
+.registerPage {
   min-height: 100vh;
   background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
   position: relative;
@@ -10,7 +10,7 @@
   flex-direction: column;
 }
 
-.loginPage::before {
+.registerPage::before {
   content: '';
   position: absolute;
   bottom: -10%;
@@ -19,6 +19,24 @@
   height: 300px;
   background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
   border-radius: 50%;
+  z-index: 0;
+}
+
+.registerPage::after {
+  content: '+';
+  position: absolute;
+  bottom: 10%;
+  right: 8%;
+  width: 60px;
+  height: 60px;
+  background: rgba(59, 130, 246, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: rgba(59, 130, 246, 0.3);
+  font-weight: 300;
   z-index: 0;
 }
 
@@ -35,7 +53,7 @@
 .logo .logoText {
   font-size: 24px;
   font-weight: 700;
-  color: #3b82f6;
+  color: #1e293b;
   letter-spacing: -0.5px;
 }
 
@@ -45,7 +63,7 @@
 }
 
 .navLink {
-  color: #6b7280;
+  color: #64748b;
   text-decoration: none;
   font-size: 14px;
   font-weight: 500;
@@ -67,7 +85,7 @@
   z-index: 1;
 }
 
-.loginContainer {
+.registerContainer {
   background: #ffffff;
   border-radius: 16px;
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
@@ -90,19 +108,19 @@
   }
 }
 
-/* Login Form */
-.loginForm {
+/* Register Form */
+.registerForm {
   display: flex;
   flex-direction: column;
   gap: 24px;
 }
 
-.loginHeader {
+.registerHeader {
   text-align: center;
   margin-bottom: 8px;
 }
 
-.welcomeText {
+.createAccountText {
   color: #111827;
   font-size: 28px;
   font-weight: 700;
@@ -176,60 +194,42 @@
   color: #9ca3af;
 }
 
-.togglePassword {
+.select {
+  width: 100%;
+  padding: 12px 40px 12px 44px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 14px;
+  background: #f9fafb;
+  transition: all 0.3s ease;
+  color: #111827;
+  appearance: none;
+  cursor: pointer;
+}
+
+.select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.dropdownIcon {
   position: absolute;
   right: 12px;
   top: 50%;
   transform: translateY(-50%);
-  background: none;
-  border: none;
+  width: 16px;
+  height: 16px;
   color: #9ca3af;
-  cursor: pointer;
-  padding: 4px;
-  border-radius: 4px;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  pointer-events: none;
+  z-index: 1;
 }
 
-.togglePassword:hover {
-  color: #3b82f6;
-  background: rgba(59, 130, 246, 0.1);
-}
-
-.togglePassword svg {
-  width: 16px;
-  height: 16px;
-}
-
-.eyeIcon {
-  width: 16px;
-  height: 16px;
-}
-
-.forgotPassword {
-  text-align: right;
-  margin-top: -4px;
-}
-
-.forgotPasswordLink {
-  color: #3b82f6;
-  text-decoration: none;
-  font-size: 12px;
-  font-weight: 500;
-  transition: all 0.3s ease;
-}
-
-.forgotPasswordLink:hover {
-  color: #2563eb;
-  text-decoration: underline;
-}
-
-.loginButton {
+.registerButton {
   width: 100%;
   padding: 14px 24px;
-  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
   color: #ffffff;
   border: none;
   border-radius: 8px;
@@ -246,7 +246,7 @@
   margin-top: 8px;
 }
 
-.loginButton::before {
+.registerButton::before {
   content: '';
   position: absolute;
   top: 0;
@@ -257,17 +257,23 @@
   transition: left 0.6s;
 }
 
-.loginButton:hover::before {
+.registerButton:hover::before {
   left: 100%;
 }
 
-.loginButton:hover {
+.registerButton:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  box-shadow: 0 4px 12px rgba(30, 41, 59, 0.3);
 }
 
-.loginButton:active {
+.registerButton:active {
   transform: translateY(0);
+}
+
+.registerButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
 }
 
 /* Register Section */
@@ -284,14 +290,14 @@
   margin: 0 0 8px 0;
 }
 
-.registerLink {
+.loginLink {
   color: #3b82f6;
   text-decoration: none;
   font-weight: 500;
   transition: all 0.3s ease;
 }
 
-.registerLink:hover {
+.loginLink:hover {
   color: #2563eb;
   text-decoration: underline;
 }
@@ -300,6 +306,8 @@
   color: #9ca3af;
   font-size: 12px;
   margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 /* Footer */
@@ -319,7 +327,7 @@
 }
 
 .footerLink {
-  color: #6b7280;
+  color: #64748b;
   text-decoration: none;
   font-size: 12px;
   font-weight: 500;
@@ -359,6 +367,23 @@
   20%, 40%, 60%, 80% { transform: translateX(5px); }
 }
 
+/* Loading State */
+.loading {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-right: 8px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .header {
@@ -373,12 +398,12 @@
     padding: 16px;
   }
   
-  .loginContainer {
+  .registerContainer {
     padding: 32px 24px;
     margin: 0;
   }
   
-  .welcomeText {
+  .createAccountText {
     font-size: 24px;
   }
   
@@ -403,11 +428,11 @@
     gap: 12px;
   }
   
-  .loginContainer {
+  .registerContainer {
     padding: 24px 20px;
   }
   
-  .welcomeText {
+  .createAccountText {
     font-size: 22px;
   }
   
@@ -415,56 +440,43 @@
     padding: 12px 14px 12px 40px;
   }
   
-  .loginButton {
+  .select {
+    padding: 12px 36px 12px 40px;
+  }
+  
+  .registerButton {
     padding: 12px 20px;
   }
 }
 
-/* Loading State */
-.loading {
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-top: 2px solid white;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin-right: 8px;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
 /* Focus States for Accessibility */
 .input:focus-visible,
-.togglePassword:focus-visible,
-.loginButton:focus-visible,
+.select:focus-visible,
+.registerButton:focus-visible,
 .navLink:focus-visible,
 .footerLink:focus-visible,
-.registerLink:focus-visible,
-.forgotPasswordLink:focus-visible {
+.loginLink:focus-visible {
   outline: 2px solid #3b82f6;
   outline-offset: 2px;
 }
 
 /* High Contrast Mode Support */
 @media (prefers-contrast: high) {
-  .loginPage {
+  .registerPage {
     background: #ffffff;
   }
   
-  .loginContainer {
+  .registerContainer {
     border: 2px solid #000000;
   }
   
-  .input {
+  .input,
+  .select {
     border: 2px solid #000000;
     background: #ffffff;
   }
   
-  .loginButton {
+  .registerButton {
     background: #000000;
     color: #ffffff;
   }

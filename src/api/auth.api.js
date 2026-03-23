@@ -8,8 +8,13 @@ export const register = async (data) => {
 export const login = async (data) => {
   const res = await API.post("/auth/login", data);
 
-  // ✅ IMPORTANT: ensure correct structure
-  return res.data.data; // { token, user }
+  // Normalize response
+  const payload = res.data.data || res.data;
+
+  return {
+    token: payload.token,
+    user: payload.user,
+  };
 };
 
 export const logout = async () => {

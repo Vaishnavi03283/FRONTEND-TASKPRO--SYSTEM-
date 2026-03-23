@@ -1,15 +1,15 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { register } from "../../api/auth.api";
 import { useAuth } from "../../hooks/useAuth";
-import "./Register.css";
+import styles from "./Register.module.css";
 
 const Register = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
 
   const [form, setForm] = useState({
-    name: "",
+    fullName: "",
     email: "",
     password: "",
     role: "USER",
@@ -35,20 +35,13 @@ const Register = () => {
     }
 
     try {
-      // Call POST /api/v1/auth/register
-      const response = await fetch('/api/v1/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(form),
+      // Call register API
+      const response = await register({
+        name: form.fullName,
+        email: form.email,
+        password: form.password,
+        role: form.role,
       });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Registration failed');
-      }
 
       // On success, redirect to login
       navigate('/login');
@@ -70,79 +63,142 @@ const Register = () => {
   };
 
   return (
-    <div className="register-wrapper">
-      {/* TOP BAR */}
-      <div className="top-bar">
-        <h2 className="brand">TaskPro</h2>
-        <div className="top-links">
-          <span>Documentation</span>
-          <span>Support</span>
+    <div className={styles.registerPage}>
+      {/* Header */}
+      <header className={styles.header}>
+        <div className={styles.logo}>
+          <span className={styles.logoText}>TaskPro</span>
         </div>
-      </div>
+        <nav className={styles.nav}>
+          <a href="/docs" className={styles.navLink}>Documentation</a>
+          <a href="/support" className={styles.navLink}>Support</a>
+        </nav>
+      </header>
 
-      {/* REGISTER CARD */}
-      <div className="register-card">
-        <h2>Create Account</h2>
-        <p className="subtitle">Join our task management platform</p>
+      {/* Main Content */}
+      <main className={styles.main}>
+        <div className={styles.registerContainer}>
+          <div className={styles.registerForm}>
+            <div className={styles.registerHeader}>
+              <h1 className={styles.createAccountText}>Create account</h1>
+              <p className={styles.subtitle}>Join the ecosystem of elite task management.</p>
+            </div>
 
-        {error && <div className="error">{error}</div>}
+            <form className={styles.form} onSubmit={handleSubmit}>
+              {error && <div className={styles.error}>⚠️ {error}</div>}
 
-        <form onSubmit={handleSubmit}>
-          <label>NAME</label>
-          <input
-            type="text"
-            name="name"
-            placeholder="John Doe"
-            value={form.name}
-            onChange={handleChange}
-            required
-          />
+              <div className={styles.formGroup}>
+                <label htmlFor="fullName" className={styles.label}>FULL NAME</label>
+                <div className={styles.inputWrapper}>
+                  <svg className={styles.inputIcon} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  </svg>
+                  <input
+                    id="fullName"
+                    type="text"
+                    name="fullName"
+                    placeholder="Enter your full name"
+                    value={form.fullName}
+                    onChange={handleChange}
+                    className={styles.input}
+                    required
+                  />
+                </div>
+              </div>
 
-          <label>EMAIL ADDRESS</label>
-          <input
-            type="email"
-            name="email"
-            placeholder="john@example.com"
-            value={form.email}
-            onChange={handleChange}
-            required
-          />
+              <div className={styles.formGroup}>
+                <label htmlFor="email" className={styles.label}>EMAIL ADDRESS</label>
+                <div className={styles.inputWrapper}>
+                  <svg className={styles.inputIcon} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                  <input
+                    id="email"
+                    type="email"
+                    name="email"
+                    placeholder="Enter your email"
+                    value={form.email}
+                    onChange={handleChange}
+                    className={styles.input}
+                    required
+                  />
+                </div>
+              </div>
 
-          <label>PASSWORD</label>
-          <input
-            type="password"
-            name="password"
-            placeholder="••••••••"
-            value={form.password}
-            onChange={handleChange}
-            required
-          />
+              <div className={styles.formGroup}>
+                <label htmlFor="password" className={styles.label}>PASSWORD</label>
+                <div className={styles.inputWrapper}>
+                  <svg className={styles.inputIcon} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                  </svg>
+                  <input
+                    id="password"
+                    type="password"
+                    name="password"
+                    placeholder="••••••••"
+                    value={form.password}
+                    onChange={handleChange}
+                    className={styles.input}
+                    required
+                  />
+                </div>
+              </div>
 
-          <label>ROLE</label>
-          <select name="role" value={form.role} onChange={handleChange}>
-            <option value="USER">User</option>
-            <option value="MANAGER">Manager</option>
-          </select>
+              <div className={styles.formGroup}>
+                <label htmlFor="role" className={styles.label}>ORGANIZATION ROLE</label>
+                <div className={styles.inputWrapper}>
+                  <svg className={styles.inputIcon} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                  <select
+                    id="role"
+                    name="role"
+                    value={form.role}
+                    onChange={handleChange}
+                    className={styles.select}
+                  >
+                    <option value="USER">USER</option>
+                    <option value="MANAGER">MANAGER</option>
+                    <option value="ADMIN">ADMIN</option>
+                  </select>
+                  <svg className={styles.dropdownIcon} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+              </div>
 
-          <button type="submit" disabled={loading}>
-            {loading ? "Creating Account..." : "Create Account"}
-          </button>
-        </form>
+              <button type="submit" className={styles.registerButton} disabled={loading}>
+                {loading ? (
+                  <>
+                    <span className={styles.loading}></span>
+                    Creating Account...
+                  </>
+                ) : (
+                  'Register'
+                )}
+              </button>
+            </form>
 
-        <p className="footer-text">
-          Already have an account?{" "}
-          <span onClick={() => navigate("/login")}>Sign In</span>
-        </p>
-        <p className="footer-text">
-          <span onClick={() => navigate("/")}>🏠 Go Home</span>
-        </p>
-
-        <div className="bottom-links">
-          <span>Privacy</span>
-          <span>Terms</span>
-          <span>Security</span>
+            <div className={styles.registerSection}>
+              <p className={styles.registerText}>
+                Already have an account? <a href="/login" className={styles.loginLink}>Login</a>
+              </p>
+              <p className={styles.curatedText}>CURATED ACCESS</p>
+            </div>
+          </div>
         </div>
-      </div>
+      </main>
+
+      {/* Footer */}
+      <footer className={styles.footer}>
+        <div className={styles.footerLinks}>
+          <a href="/privacy" className={styles.footerLink}>PRIVACY</a>
+          <span className={styles.separator}>•</span>
+          <a href="/terms" className={styles.footerLink}>TERMS</a>
+          <span className={styles.separator}>•</span>
+          <a href="/security" className={styles.footerLink}>SECURITY</a>
+        </div>
+      </footer>
     </div>
   );
 };
