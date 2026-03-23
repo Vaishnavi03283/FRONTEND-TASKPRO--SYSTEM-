@@ -59,33 +59,7 @@ export const getManagerDashboard = async () => {
     if (errorMessage.includes('Task.findAll is not a function')) {
       console.error("💡 Backend using wrong syntax! Needs PostgreSQL: Task.findAll({ where: { projectId: projectId } }) instead of Task.find()");
     }
-    
-    // Enhanced error message for backend developer
-    console.error(`
-🚨 BACKEND FIX REQUIRED:
--------------------------------------------
-The backend API is using incorrect database syntax.
 
-REQUIREMENTS:
-✅ Use PostgreSQL/Sequelize syntax:
-   - Project.count({ where: { manager: managerId } })
-   - Project.findAll({ where: { manager: managerId } })
-   - Task.count({ where: { projectId: projectId } })
-   - Task.findAll({ where: { projectId: projectId } })
-
-❌ NOT (current usage):
-   - Project.count()  // Missing 'where' clause
-   - Project.find()  // Should be findAll()
-   - Task.count()     // Missing 'where' clause
-   - Task.find()     // Should be findAll()
-
-ENDPOINTS TO FIX:
-✅ GET /api/v1/dashboard/manager
-✅ GET /api/v1/projects/manager/:id
-✅ GET /api/v1/tasks/project/:id
-
--------------------------------------------
-    `);
     
     // Return fallback data with more detailed error info
     return {
