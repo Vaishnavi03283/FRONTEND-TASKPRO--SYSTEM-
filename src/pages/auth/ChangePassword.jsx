@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { changePassword } from '../../api/auth.api';
+import Button from '../../components/common/Button';
+import { Card, CardHeader, CardBody, CardTitle, CardDescription } from '../../components/common/Card';
+import { cn } from '../../utils';
 import styles from './ChangePassword.module.css';
 
 const ChangePassword = () => {
@@ -87,20 +90,20 @@ const ChangePassword = () => {
 
   return (
     <div className={styles.changePassword}>
-      <div className={styles.container}>
-        <div className={styles.header}>
-          <h1>Change Password</h1>
-          <p>Update your account password</p>
-        </div>
+      <Card variant="default" shadow="lg" className={styles.container}>
+        <CardHeader className={styles.header}>
+          <CardTitle>Change Password</CardTitle>
+          <CardDescription>Update your account password</CardDescription>
+        </CardHeader>
+        <CardBody className={styles.formBody}>
+          {message && (
+            <div className={cn(styles.message, message.includes('success') ? styles.success : styles.error)}>
+              <p>{message}</p>
+              <Button onClick={() => setMessage('')} variant="ghost" size="sm" className={styles.closeBtn}>×</Button>
+            </div>
+          )}
 
-        {message && (
-          <div className={`${styles.message} ${message.includes('success') ? styles.success : styles.error}`}>
-            <p>{message}</p>
-            <button onClick={() => setMessage('')}>×</button>
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit} className={styles.form}>
+          <form onSubmit={handleSubmit} className={styles.form}>
           <div className={styles.formGroup}>
             <label htmlFor="currentPassword">Current Password</label>
             <input
@@ -150,12 +153,13 @@ const ChangePassword = () => {
           </div>
 
           <div className={styles.formActions}>
-            <button type="submit" disabled={loading} className={styles.submitBtn}>
+            <Button type="submit" disabled={loading} loading={loading} variant="primary" size="lg" className={styles.submitBtn}>
               {loading ? 'Changing Password...' : 'Change Password'}
-            </button>
+            </Button>
           </div>
         </form>
-      </div>
+        </CardBody>
+      </Card>
     </div>
   );
 };

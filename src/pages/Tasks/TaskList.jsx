@@ -6,6 +6,9 @@ import { getProjects } from "../../api/project.api";
 import { getUsers } from "../../api/user.api";
 import TaskCard from "../../components/common/TaskCard";
 import { useNavigate } from "react-router-dom";
+import Button from "../../components/common/Button";
+import { Card, CardHeader, CardBody, CardTitle, CardDescription } from "../../components/common/Card";
+import { cn } from "../../utils";
 import "./TasksList.css";
 
 const TasksList = () => {
@@ -200,10 +203,14 @@ const TasksList = () => {
   if (loading) {
     return (
       <div className="tasks-page">
-        <div className="loading">
-          <div className="spinner"></div>
-          <p>Loading tasks...</p>
-        </div>
+        <Card variant="default" shadow="md" className="loading-card">
+          <CardBody className="loading-body">
+            <div className="loading">
+              <div className="spinner"></div>
+              <p>Loading tasks...</p>
+            </div>
+          </CardBody>
+        </Card>
       </div>
     );
   }
@@ -211,59 +218,67 @@ const TasksList = () => {
   if (error) {
     return (
       <div className="tasks-page">
-        <div className="error">
-          <p>{error}</p>
-          <button
-            onClick={
-              user?.role === "MANAGER"
-                ? fetchManagerProjectsAndTasks
-                : fetchAllTasks
-            }
-          >
-            Retry
-          </button>
-        </div>
+        <Card variant="error" shadow="md" className="error-card">
+          <CardBody className="error-body">
+            <div className="error">
+              <p>{error}</p>
+              <Button
+                onClick={
+                  user?.role === "MANAGER"
+                    ? fetchManagerProjectsAndTasks
+                    : fetchAllTasks
+                }
+                variant="primary"
+                size="md"
+              >
+                Retry
+              </Button>
+            </div>
+          </CardBody>
+        </Card>
       </div>
     );
   }
 
   return (
     <div className="tasks-page">
-      <div className="tasks-header">
-        <div className="header-content">
+      <Card variant="default" shadow="md" className="tasks-header">
+        <CardHeader className="header-content">
           <div className="header-text">
-            <h2>
+            <CardTitle>
               {user?.role === "MANAGER"
                 ? "My Project Tasks"
                 : "Tasks"}
-            </h2>
-            <p className="header-subtitle">
+            </CardTitle>
+            <CardDescription className="header-subtitle">
               {user?.role === "MANAGER"
                 ? "Manage tasks from your projects"
                 : "View and manage your tasks"}
-            </p>
+            </CardDescription>
           </div>
 
           {user?.role === "MANAGER" && (
-            <button
+            <Button
               onClick={() => navigate("/tasks/create")}
+              variant="primary"
+              size="md"
               className="create-task-btn"
             >
               <span className="btn-icon">+</span>
               Create Task
-            </button>
+            </Button>
           )}
-        </div>
-      </div>
+        </CardHeader>
+      </Card>
 
       {/* Filters Section */}
-      <div className="filters-section">
-        <div className="filters-header">
-          <h3>Filters</h3>
-          <button onClick={clearFilters} className="clear-filters-btn">
+      <Card variant="default" shadow="sm" className="filters-section">
+        <CardHeader className="filters-header">
+          <CardTitle>Filters</CardTitle>
+          <Button onClick={clearFilters} variant="ghost" size="sm" className="clear-filters-btn">
             Clear All
-          </button>
-        </div>
+          </Button>
+        </CardHeader>
         
         <div className="filters-grid">
           {/* Search */}

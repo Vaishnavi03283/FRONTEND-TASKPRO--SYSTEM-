@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { useManagerDashboard } from "../../hooks/useDashboard";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../store/authStore";
+import Button from "../../components/common/Button";
+import { Card, CardHeader, CardBody, CardTitle, CardDescription } from "../../components/common/Card";
+import { cn } from "../../utils";
 import styles from "./ManagerDashboard.module.css";
 
 const ManagerDashboard = () => {
@@ -204,46 +207,58 @@ const ManagerDashboard = () => {
 
       {/* Enhanced Stats Grid */}
       <div className={styles.statsGrid}>
-        <div className={styles.statCard}>
-          <div className={`${styles.statIcon} ${styles.totalProjects}`}>
-            📁
-          </div>
-          <div className={styles.statContent}>
-            <h3>{data.stats?.totalProjects || 0}</h3>
-            <p>Total Projects</p>
-            <span className={styles.statChange}>+{activeProjects} active</span>
-          </div>
-        </div>
+        <Card variant="default" shadow="md" hover className={styles.statCard}>
+          <CardBody className={styles.statCardBody}>
+            <div className={`${styles.statIcon} ${styles.totalProjects}`}>
+              📁
+            </div>
+            <div className={styles.statContent}>
+              <h3>{data.stats?.totalProjects || 0}</h3>
+              <p>Total Projects</p>
+              <span className={styles.statChange}>+{activeProjects} active</span>
+            </div>
+          </CardBody>
+        </Card>
 
-        <div className={styles.statCard}>
-          <div className={`${styles.statIcon} ${styles.totalTasks}`}>
-            📋
-          </div>
-          <div className={styles.statContent}>
-            <h3>{data.stats?.totalTasks || 0}</h3>
-            <p>Total Tasks</p>
-          </div>
-        </div>
+        <Card variant="primary" shadow="md" hover className={styles.statCard}>
+          <CardBody className={styles.statCardBody}>
+            <div className={`${styles.statIcon} ${styles.totalTasks}`}>
+              📋
+            </div>
+            <div className={styles.statContent}>
+              <h3>{data.stats?.totalTasks || 0}</h3>
+              <p>Total Tasks</p>
+              <span className={styles.statChange}>This sprint</span>
+            </div>
+          </CardBody>
+        </Card>
 
-        <div className={`${styles.statCard} ${styles.greenCard}`}>
-          <div className={`${styles.statIcon} ${styles.completedTasks}`}>
-            ✅
-          </div>
-          <div className={styles.statContent}>
-            <h3>{data.stats?.completedTasks || 0}</h3>
-            <p>Completed Tasks</p>
-            <span className={styles.statChange}>{completionRate}% rate</span>
-          </div>
-        </div>
+        <Card variant="success" shadow="md" hover className={styles.statCard}>
+          <CardBody className={styles.statCardBody}>
+            <div className={`${styles.statIcon} ${styles.completedTasks}`}>
+              ✅
+            </div>
+            <div className={styles.statContent}>
+              <h3>{data.stats?.completedTasks || 0}</h3>
+              <p>Completed Tasks</p>
+              <span className={styles.statChange}>{completionRate}% rate</span>
+            </div>
+          </CardBody>
+        </Card>
 
-        <div className={styles.statCard}>
-          <div className={`${styles.statIcon} ${styles.teamMembers}`}>
-            👥
-          </div>
-          <div className={styles.statContent}>
-            <h3>{data.stats?.teamMembers || 0}</h3>
-            <p>Team Members</p>
-          </div>
+        <Card variant="secondary" shadow="md" hover className={styles.statCard}>
+          <CardBody className={styles.statCardBody}>
+            <div className={`${styles.statIcon} ${styles.teamMembers}`}>
+              👥
+            </div>
+            <div className={styles.statContent}>
+              <h3>{data.stats?.teamMembers || 0}</h3>
+              <p>Team Members</p>
+              <span className={styles.statChange}>Active</span>
+            </div>
+          </CardBody>
+        </Card>
+      </div>
         </div>
       </div>
 

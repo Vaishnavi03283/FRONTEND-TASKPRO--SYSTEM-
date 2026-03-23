@@ -5,6 +5,9 @@ import { getComments, addComment, deleteComment } from "../../api/task.api";
 import { getUsers } from "../../api/user.api";
 import { useAuth } from "../../hooks/useAuth";
 import { useTask } from "../../context/TaskContext";
+import Button from "../../components/common/Button";
+import { Card, CardHeader, CardBody, CardTitle, CardDescription } from "../../components/common/Card";
+import { cn } from "../../utils";
 import "./TaskDetails.css";
 
 const TaskDetails = () => {
@@ -292,10 +295,14 @@ const TaskDetails = () => {
   if (loading || state.loading) {
     return (
       <div className="task-details-container">
-        <div className="loading-container">
-          <div className="spinner"></div>
-          <p>Loading task details...</p>
-        </div>
+        <Card variant="default" shadow="md" className="loading-card">
+          <CardBody className="loading-body">
+            <div className="loading-container">
+              <div className="spinner"></div>
+              <p>Loading task details...</p>
+            </div>
+          </CardBody>
+        </Card>
       </div>
     );
   }
@@ -305,18 +312,17 @@ const TaskDetails = () => {
   if (displayError) {
     return (
       <div className="task-details-container">
-        <div className="error-container">
-          <div className="error-content">
-            <div className="error-icon">⚠️</div>
-            <h3>Error Loading Task</h3>
-            <p>{displayError}</p>
-            <button onClick={() => {
-              setError(null);
-              actions.clearError();
-              fetchTaskDetails();
-            }} className="retry-btn">Retry</button>
-          </div>
-        </div>
+        <Card variant="error" shadow="md" className="error-card">
+          <CardBody className="error-body">
+            <div className="error-container">
+              <p>{displayError}</p>
+              <Button onClick={() => {
+                setError(null);
+                actions.clearError();
+              }} variant="primary" size="md">Retry</Button>
+            </div>
+          </CardBody>
+        </Card>
       </div>
     );
   }
@@ -342,45 +348,54 @@ const TaskDetails = () => {
     <div className="task-details-container">
       {/* Error Notification */}
       {displayError && (
-        <div className="error-notification">
-          <div className="error-notification-content">
-            <span className="error-icon">⚠️</span>
-            <span className="error-message">{displayError}</span>
-            <button 
-              onClick={() => {
-                setError(null);
-                actions.clearError();
-              }} 
-              className="error-close-btn"
-            >
-              ×
-            </button>
-          </div>
-        </div>
+        <Card className={cn("error-notification", styles.errorAlert)} variant="error" shadow="sm">
+          <CardBody className="error-notification-body">
+            <div className="error-notification-content">
+              <span className="error-icon">⚠️</span>
+              <span className="error-message">{displayError}</span>
+              <Button 
+                onClick={() => {
+                  setError(null);
+                  actions.clearError();
+                }} 
+                variant="ghost"
+                size="sm"
+                className="error-close-btn"
+              >
+                ×
+              </Button>
+            </div>
+          </CardBody>
+        </Card>
       )}
 
       {/* Header Section */}
-      <div className="task-header">
-        <div className="header-left">
-          <button 
-            onClick={() => navigate("/tasks")} 
-            className="back-btn"
-          >
-            ← Back to Tasks
-          </button>
-          <h1 className="task-title">{state.currentTask.title}</h1>
-        </div>
-        
-        {canEditTask && (
-          <div className="header-actions">
-            <button 
-              onClick={handleEditTask}
-              className="action-btn edit-btn"
-              title="Edit Task"
+      <Card variant="default" shadow="md" className="task-header">
+        <CardBody className="task-header-body">
+          <div className="header-left">
+            <Button 
+              onClick={() => navigate("/tasks")} 
+              variant="ghost"
+              size="sm"
+              className="back-btn"
             >
-              <span>✏️</span>
-              Edit
-            </button>
+              ← Back to Tasks
+            </Button>
+            <CardTitle className="task-title">{state.currentTask.title}</CardTitle>
+          </div>
+          
+          {canEditTask && (
+            <div className="header-actions">
+              <Button 
+                onClick={handleEditTask}
+                variant="secondary"
+                size="sm"
+                className="action-btn edit-btn"
+                title="Edit Task"
+              >
+                <span>✏️</span>
+                Edit
+              </Button>
             {canAssignTask && (
               <div className="assign-dropdown">
                 <select 
@@ -405,183 +420,199 @@ const TaskDetails = () => {
               </div>
             )}
             {canDeleteTask && (
-              <button 
+              <Button 
                 onClick={handleDeleteTask}
+                variant="danger"
+                size="sm"
                 className="action-btn delete-btn"
                 title="Delete Task"
               >
                 <span>🗑️</span>
                 Delete
-              </button>
+              </Button>
             )}
           </div>
         )}
-      </div>
+        </CardBody>
+      </Card>
 
-      <div className="task-content">
-        {/* Main Task Info */}
-        <div className="task-main">
-          <div className="task-info-card">
-            <div className="task-description">
-              <h3>Description</h3>
-              <p>{state.currentTask.description || 'No description provided'}</p>
-            </div>
-
-            <div className="task-meta-grid">
-              <div className="meta-item">
-                <label>Status:</label>
-                <div className="status-selector">
-                  <select 
-                    value={state.currentTask.status} 
-                    onChange={(e) => handleStatusChange(e.target.value)}
-                    disabled={statusLoading || !canEditTask}
-                    className="status-select"
-                  >
-                    {statusOptions.map(status => (
-                      <option key={status} value={status}>
-                        {status.replace('_', ' ')}
-                      </option>
-                    ))}
-                  </select>
-                  <span 
-                    className="status-indicator"
-                    style={{ backgroundColor: getStatusColor(state.currentTask.status) }}
-                  ></span>
+      <Card variant="default" shadow="lg" className="task-content">
+        <CardBody className="task-content-body">
+          {/* Main Task Info */}
+          <div className="task-main">
+            <Card variant="default" shadow="sm" className="task-info-card">
+              <CardBody className="task-info-body">
+                <div className="task-description">
+                  <CardTitle>Description</CardTitle>
+                  <p>{state.currentTask.description || 'No description provided'}</p>
                 </div>
-              </div>
 
-              <div className="meta-item">
-                <label>Priority:</label>
-                <span 
-                  className="priority-badge"
-                  style={{ backgroundColor: getPriorityColor(state.currentTask.priority) }}
-                >
-                  {state.currentTask.priority}
-                </span>
-              </div>
-
-              <div className="meta-item">
-                <label>Assigned to:</label>
-                <span className="assignee-info">
-                  {state.currentTask.assigned_to_name || state.currentTask.assignee?.name || 'Unassigned'}
-                </span>
-              </div>
-
-              <div className="meta-item">
-                <label>Created Date:</label>
-                <span className="date-info">
-                  {state.currentTask.created_at 
-                    ? new Date(state.currentTask.created_at).toLocaleDateString('en-US', {
-                        year: 'numeric',
-                        month: 'short',
-                        day: 'numeric'
-                      })
-                    : 'N/A'}
-                </span>
-              </div>
-
-              <div className="meta-item">
-                <label>Due Date:</label>
-                <span className="date-info">
-                  {state.currentTask.due_date 
-                    ? new Date(state.currentTask.due_date).toLocaleDateString('en-US', {
-                        year: 'numeric',
-                        month: 'short',
-                        day: 'numeric'
-                      })
-                    : 'No due date'}
-                </span>
-              </div>
-
-              <div className="meta-item">
-                <label>Project:</label>
-                <span className="project-info">
-                  {state.currentTask.project_name || state.currentTask.project?.name || 'N/A'}
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Comments Section */}
-        <div className="comments-section">
-          <h3 className="comments-title">Comments ({comments.length})</h3>
-          
-          {/* Add Comment */}
-          <div className="add-comment">
-            <textarea
-              value={newComment}
-              onChange={(e) => setNewComment(e.target.value)}
-              placeholder="Add a comment..."
-              className="comment-input"
-              rows={3}
-            />
-            <button 
-              onClick={handleAddComment}
-              disabled={!newComment.trim()}
-              className="add-comment-btn"
-            >
-              Add Comment
-            </button>
-          </div>
-
-          {/* Comments List */}
-          <div className="comments-list">
-            {comments.length === 0 ? (
-              <div className="no-comments">
-                <p>No comments yet. Be the first to comment!</p>
-              </div>
-            ) : (
-              comments.map(comment => (
-                <div key={comment.id} className="comment-item">
-                  <div className="comment-header">
-                    <div className="comment-author">
-                      <strong>{comment.user?.name || comment.author_name || 'Anonymous'}</strong>
-                      <span className="comment-date">
-                        {comment.created_at 
-                          ? new Date(comment.created_at).toLocaleDateString('en-US', {
-                              year: 'numeric',
-                              month: 'short',
-                              day: 'numeric',
-                              hour: '2-digit',
-                              minute: '2-digit'
-                            })
-                          : ''}
-                      </span>
-                    </div>
-                    {(user?.id === comment.user_id || canDeleteTask) && (
-                      <button 
-                        onClick={() => handleDeleteComment(comment.id)}
-                        className="delete-comment-btn"
-                        title="Delete comment"
+                <div className="task-meta-grid">
+                  <div className="meta-item">
+                    <label>Status:</label>
+                    <div className="status-selector">
+                      <select 
+                        value={state.currentTask.status} 
+                        onChange={(e) => handleStatusChange(e.target.value)}
+                        disabled={statusLoading || !canEditTask}
+                        className="status-select"
                       >
-                        🗑️
-                      </button>
-                    )}
+                        {statusOptions.map(status => (
+                          <option key={status} value={status}>
+                            {status.replace('_', ' ')}
+                          </option>
+                        ))}
+                      </select>
+                      <span 
+                        className="status-indicator"
+                        style={{ backgroundColor: getStatusColor(state.currentTask.status) }}
+                      ></span>
+                    </div>
                   </div>
-                  <div className="comment-content">
-                    {comment.content}
+
+                  <div className="meta-item">
+                    <label>Priority:</label>
+                    <span 
+                      className="priority-badge"
+                      style={{ backgroundColor: getPriorityColor(state.currentTask.priority) }}
+                    >
+                      {state.currentTask.priority}
+                    </span>
+                  </div>
+
+                  <div className="meta-item">
+                    <label>Assigned to:</label>
+                    <span className="assignee-info">
+                      {state.currentTask.assigned_to_name || state.currentTask.assignee?.name || 'Unassigned'}
+                    </span>
+                  </div>
+
+                  <div className="meta-item">
+                    <label>Created Date:</label>
+                    <span className="date-info">
+                      {state.currentTask.created_at 
+                        ? new Date(state.currentTask.created_at).toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric'
+                          })
+                        : 'N/A'}
+                    </span>
+                  </div>
+
+                  <div className="meta-item">
+                    <label>Due Date:</label>
+                    <span className="date-info">
+                      {state.currentTask.due_date 
+                        ? new Date(state.currentTask.due_date).toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric'
+                          })
+                        : 'No due date'}
+                    </span>
+                  </div>
+
+                  <div className="meta-item">
+                    <label>Project:</label>
+                    <span className="project-info">
+                      {state.currentTask.project_name || state.currentTask.project?.name || 'N/A'}
+                    </span>
                   </div>
                 </div>
-              ))
-            )}
+              </CardBody>
+            </Card>
           </div>
-        </div>
-      </div>
+
+          {/* Comments Section */}
+          <Card variant="default" shadow="sm" className="comments-section">
+            <CardHeader>
+              <CardTitle>Comments ({comments.length})</CardTitle>
+            </CardHeader>
+            <CardBody>
+              {/* Add Comment */}
+              <div className="add-comment">
+                <textarea
+                  value={newComment}
+                  onChange={(e) => setNewComment(e.target.value)}
+                  placeholder="Add a comment..."
+                  className="comment-input"
+                  rows={3}
+                />
+                <Button 
+                  onClick={handleAddComment}
+                  disabled={!newComment.trim()}
+                  variant="primary"
+                  size="sm"
+                  className="add-comment-btn"
+                >
+                  Add Comment
+                </Button>
+              </div>
+
+              {/* Comments List */}
+              <div className="comments-list">
+                {comments.length === 0 ? (
+                  <div className="no-comments">
+                    <p>No comments yet. Be the first to comment!</p>
+                  </div>
+                ) : (
+                  comments.map(comment => (
+                    <div key={comment.id} className="comment-item">
+                      <div className="comment-header">
+                        <div className="comment-author">
+                          <strong>{comment.user?.name || comment.author_name || 'Anonymous'}</strong>
+                          <span className="comment-date">
+                            {comment.created_at 
+                              ? new Date(comment.created_at).toLocaleDateString('en-US', {
+                                  year: 'numeric',
+                                  month: 'short',
+                                  day: 'numeric',
+                                  hour: '2-digit',
+                                  minute: '2-digit'
+                                })
+                              : ''}
+                          </span>
+                        </div>
+                        {(user?.id === comment.user_id || canDeleteTask) && (
+                          <Button 
+                            onClick={() => handleDeleteComment(comment.id)}
+                            variant="ghost"
+                            size="sm"
+                            className="delete-comment-btn"
+                            title="Delete comment"
+                          >
+                            🗑️
+                          </Button>
+                        )}
+                      </div>
+                      <div className="comment-content">
+                        {comment.content}
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            </CardBody>
+          </Card>
+        
 
       {/* Edit Modal */}
       {isEditing && (
         <div className="task-edit-modal">
-          <div className="task-edit-modal-content">
-            <div className="task-edit-modal-header">
-              <h3>Edit Task</h3>
-              <button 
+          <Card variant="default" shadow="lg" className="task-edit-modal-content">
+            <CardHeader className="task-edit-modal-header">
+              <CardTitle>Edit Task</CardTitle>
+              <Button 
+                variant="ghost"
+                size="sm"
                 className="task-edit-close-btn" 
                 onClick={handleCancelEdit}
               >
                 ×
-              </button>
-            </div>
+              </Button>
+            </CardHeader>
+            <CardBody className="task-edit-modal-body">
             
             <div className="task-edit-form">
               <div className="task-edit-form-group">
@@ -644,23 +675,30 @@ const TaskDetails = () => {
               </div>
 
               <div className="task-edit-form-actions">
-                <button 
+                <Button 
+                  variant="secondary"
+                  size="sm"
                   className="task-edit-cancel-btn" 
                   onClick={handleCancelEdit}
                 >
                   Cancel
-                </button>
-                <button 
+                </Button>
+                <Button 
+                  variant="primary"
+                  size="sm"
                   className="task-edit-save-btn" 
                   onClick={handleSaveEdit}
                 >
                   Save Changes
-                </button>
+                </Button>
               </div>
             </div>
-          </div>
+            </CardBody>
+          </Card>
         </div>
       )}
+        </CardBody>
+      </Card>
     </div>
   );
 };

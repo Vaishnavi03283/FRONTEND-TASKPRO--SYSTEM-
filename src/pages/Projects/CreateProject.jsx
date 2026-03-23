@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { createProject } from "../../api/project.api";
 import { useNavigate } from "react-router-dom";
+import Button from "../../components/common/Button";
+import { Card, CardHeader, CardBody, CardTitle, CardDescription } from "../../components/common/Card";
+import { cn } from "../../utils";
 import "./CreateProject.css";
 
 const CreateProject = () => {
@@ -80,28 +83,31 @@ const CreateProject = () => {
 
   return (
     <div className="create-project-container">
-      <div className="create-project-header">
-        <button onClick={handleCancel} className="back-btn">
-          ← Back
-        </button>
-        <h1>Create New Project</h1>
-      </div>
+      <Card variant="default" shadow="md" className="create-project-header">
+        <CardBody className="create-project-header-body">
+          <Button onClick={handleCancel} variant="ghost" size="sm" className="back-btn">
+            ← Back
+          </Button>
+          <CardTitle className="page-title">Create New Project</CardTitle>
+        </CardBody>
+      </Card>
 
-      <div className="create-project-form">
-        {submitSuccess && (
-          <div className="success-message">
-            <div className="success-icon">✓</div>
-            <p>Project created successfully!</p>
-          </div>
-        )}
+      <Card variant="primary" shadow="lg" className="create-project-form">
+        <CardBody className="create-project-form-body">
+          {submitSuccess && (
+            <div className={cn("success-message", styles.successAlert)}>
+              <div className="success-icon">✓</div>
+              <p>Project created successfully!</p>
+            </div>
+          )}
 
-        {errors.submit && (
-          <div className="error-message">
-            <p>{errors.submit.message}</p>
-          </div>
-        )}
+          {errors.submit && (
+            <div className={cn("error-message", styles.errorAlert)}>
+              <p>{errors.submit.message}</p>
+            </div>
+          )}
 
-        <form onSubmit={handleSubmit(onSubmit)}>
+          <form onSubmit={handleSubmit(onSubmit)}>
 
           {/* Name */}
           <div className="form-group">
@@ -162,17 +168,18 @@ const CreateProject = () => {
 
           {/* Buttons */}
           <div className="form-actions">
-            <button type="button" onClick={handleCancel}>
+            <Button type="button" onClick={handleCancel} variant="secondary" size="md">
               Cancel
-            </button>
+            </Button>
 
-            <button type="submit" disabled={isSubmitting}>
+            <Button type="submit" variant="primary" size="lg" disabled={isSubmitting} loading={isSubmitting}>
               {isSubmitting ? "Creating..." : "Create Project"}
-            </button>
+            </Button>
           </div>
 
         </form>
-      </div>
+        </CardBody>
+      </Card>
     </div>
   );
 };

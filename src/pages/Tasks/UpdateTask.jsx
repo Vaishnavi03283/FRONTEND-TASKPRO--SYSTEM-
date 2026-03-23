@@ -4,6 +4,9 @@ import { getTaskById, updateTask } from '../../api/task.api';
 import { useProjectList } from '../../hooks/useProjects';
 import { useUserList } from '../../hooks/useUser';
 import { useAuth } from '../../hooks/useAuth';
+import Button from '../../components/common/Button';
+import { Card, CardHeader, CardBody, CardTitle, CardDescription } from '../../components/common/Card';
+import { cn } from '../../utils';
 import './UpdateTask.css';
 
 // Validation utilities
@@ -252,34 +255,44 @@ const UpdateTask = () => {
   if (taskLoading) {
     return (
       <div className="update-task">
-        <div className="loading-container">
-          <div className="spinner"></div>
-          <p>Loading task details...</p>
-        </div>
+        <Card variant="default" shadow="md" className="loading-card">
+          <CardBody className="loading-body">
+            <div className="loading-container">
+              <div className="spinner"></div>
+              <p>Loading task details...</p>
+            </div>
+          </CardBody>
+        </Card>
       </div>
     );
   }
 
   return (
     <div className="update-task">
-      <div className="page-header">
-        <button className="back-btn" onClick={handleCancel}>
-          ← Back to Task
-        </button>
-        <div className="header-content">
-          <h1>Update Task</h1>
-          <p>Modify task details below</p>
-        </div>
-      </div>
+      <Card variant="default" shadow="md" className="page-header">
+        <CardBody className="page-header-body">
+          <Button className="back-btn" onClick={handleCancel} variant="ghost" size="sm">
+            ← Back to Task
+          </Button>
+          <div className="header-content">
+            <CardTitle>Update Task</CardTitle>
+            <CardDescription>Modify task details below</CardDescription>
+          </div>
+        </CardBody>
+      </Card>
 
       {errors.submit && (
-        <div className="form-error alert">
-          <span className="error-icon">⚠️</span>
-          {errors.submit}
-        </div>
+        <Card className={cn("form-error alert", styles.errorAlert)} variant="error" shadow="sm">
+          <CardBody className="error-body">
+            <span className="error-icon">⚠️</span>
+            {errors.submit}
+          </CardBody>
+        </Card>
       )}
 
-      <form onSubmit={handleSubmit} className="task-form">
+      <Card variant="primary" shadow="lg" className="task-form">
+        <CardBody className="task-form-body">
+          <form onSubmit={handleSubmit} className="task-form-inner">
         <div className="form-section">
           <h2>Task Information</h2>
           <div className="form-grid">
@@ -444,33 +457,30 @@ const UpdateTask = () => {
           )}
 
         <div className="form-actions">
-          <button
+          <Button
             type="button"
-            className="cancel-btn"
+            variant="secondary"
+            size="md"
             onClick={handleCancel}
             disabled={loading}
+            className="cancel-btn"
           >
             Cancel
-          </button>
-          <button
+          </Button>
+          <Button
             type="submit"
-            className="submit-btn"
+            variant="primary"
+            size="lg"
             disabled={loading || Object.keys(errors).some(key => errors[key]) || !hasChanges()}
+            loading={loading}
+            className="submit-btn"
           >
-            {loading ? (
-              <>
-                <span className="spinner"></span>
-                Updating Task...
-              </>
-            ) : (
-              <>
-                <span className="btn-icon">💾</span>
-                Update Task
-              </>
-            )}
-          </button>
+            {loading ? 'Updating Task...' : '💾 Update Task'}
+          </Button>
         </div>
-      </form>
+          </form>
+        </CardBody>
+      </Card>
     </div>
   );
 };

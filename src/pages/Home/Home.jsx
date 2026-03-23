@@ -1,4 +1,7 @@
 import { useNavigate } from "react-router-dom";
+import Button from "../../components/common/Button";
+import { Card, CardHeader, CardBody, CardTitle, CardDescription } from "../../components/common/Card";
+import { cn } from "../../utils";
 import styles from "./Home.module.css";
 
 const Home = () => {
@@ -29,18 +32,22 @@ const Home = () => {
               Streamline team collaboration, automate workflows, and deliver projects faster with TaskPro's comprehensive task management platform.
             </p>
             <div className={styles.buttons}>
-              <button 
+              <Button 
                 onClick={() => navigate("/register")} 
+                variant="primary"
+                size="lg"
                 className={styles.signupBtn}
               >
                 Sign Up
-              </button>
-              <button 
+              </Button>
+              <Button 
                 onClick={() => navigate("/login")} 
+                variant="secondary"
+                size="lg"
                 className={styles.loginBtn}
               >
                 Login
-              </button>
+              </Button>
             </div>
           </div>
           

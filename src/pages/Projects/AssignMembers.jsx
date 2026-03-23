@@ -2,6 +2,9 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getUsers } from "../../api/user.api";
 import { addMembers } from "../../api/project.api";
+import Button from "../../components/common/Button";
+import { Card, CardHeader, CardBody, CardTitle, CardDescription } from "../../components/common/Card";
+import { cn } from "../../utils";
 import "./AssignMembers.css";
 
 const AssignMembers = () => {
@@ -108,30 +111,35 @@ const AssignMembers = () => {
 
   return (
     <div className="assign-members-container">
-      <div className="assign-members-header">
-        <button 
-          className="back-arrow" 
-          onClick={handleCancel}
-          title="Back to Project"
-        >
-          ←
-        </button>
-        <h1>Assign Members to Project</h1>
-      </div>
+      <Card variant="default" shadow="md" className="assign-members-header">
+        <CardBody className="assign-members-header-body">
+          <Button 
+            variant="ghost" 
+            size="sm"
+            className="back-arrow" 
+            onClick={handleCancel}
+            title="Back to Project"
+          >
+            ←
+          </Button>
+          <CardTitle className="page-title">Assign Members to Project</CardTitle>
+        </CardBody>
+      </Card>
 
-      <div className="assign-members-content">
-        {success && (
-          <div className="success-message">
-            <div className="success-icon">✓</div>
-            <p>Members added successfully! Redirecting...</p>
+      <Card variant="primary" shadow="lg" className="assign-members-content">
+        <CardBody className="assign-members-body">
+          {success && (
+            <div className={cn("success-message", styles.successAlert)}>
+              <div className="success-icon">✓</div>
+              <p>Members added successfully! Redirecting...</p>
           </div>
-        )}
+          )}
 
         {error && (
-          <div className="error-message">
+          <div className={cn("error-message", styles.errorAlert)}>
             <div className="error-icon">⚠</div>
             <p>{error}</p>
-            <button onClick={() => setError(null)} className="close-btn">×</button>
+            <Button onClick={() => setError(null)} variant="ghost" size="sm" className="close-btn">×</Button>
           </div>
         )}
 
@@ -207,31 +215,30 @@ const AssignMembers = () => {
 
         {/* Action Buttons */}
         <div className="action-buttons">
-          <button 
+          <Button 
             onClick={handleCancel}
-            className="cancel-btn"
+            variant="secondary"
+            size="md"
             disabled={submitting}
+            className="cancel-btn"
           >
             Cancel
-          </button>
-          <button 
+          </Button>
+          <Button 
             onClick={handleAddMembers}
-            className="add-members-btn"
+            variant="primary"
+            size="lg"
             disabled={submitting || selectedUsers.length === 0}
+            loading={submitting}
+            className="add-members-btn"
           >
-            {submitting ? (
-              <>
-                <div className="spinner"></div>
-                Adding Members...
-              </>
-            ) : (
-              `Add ${selectedUsers.length} Member${selectedUsers.length !== 1 ? 's' : ''}`
-            )}
-          </button>
+            {submitting ? 'Adding Members...' : `Add ${selectedUsers.length} Member${selectedUsers.length !== 1 ? 's' : ''}`}
+          </Button>
         </div>
-      </div>
-    </div>
-  );
+      </CardBody>
+    </Card>
+  </div>
+);
 };
 
 export default AssignMembers;

@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import { changePassword } from '../../api/auth.api';
 import { Link } from 'react-router-dom';
+import Button from '../../components/common/Button';
+import { Card, CardHeader, CardBody, CardTitle, CardDescription } from '../../components/common/Card';
+import { cn } from '../../utils';
 import styles from './Profile.module.css';
 
 const Profile = () => {
@@ -56,23 +59,28 @@ const Profile = () => {
       </div>
 
       {message && (
-        <div className={`${styles.message} ${message.includes('success') ? styles.success : styles.error}`}>
-          <p>{message}</p>
-          <button onClick={() => setMessage('')}>×</button>
-        </div>
+        <Card className={cn(styles.message, message.includes('success') ? styles.success : styles.error)} variant="default" shadow="sm">
+          <CardBody className={styles.messageBody}>
+            <p>{message}</p>
+            <Button onClick={() => setMessage('')} variant="ghost" size="sm" className={styles.closeBtn}>×</Button>
+          </CardBody>
+        </Card>
       )}
 
       <div className={styles.content}>
-        <div className={styles.section}>
-          <div className={styles.sectionHeader}>
-            <h2>Personal Information</h2>
-            <button 
-              className={styles.editBtn}
+        <Card variant="default" shadow="md" className={styles.section}>
+          <CardHeader className={styles.sectionHeader}>
+            <CardTitle>Personal Information</CardTitle>
+            <Button 
+              variant="ghost"
+              size="sm"
               onClick={handleEditToggle}
+              className={styles.editBtn}
             >
               {isEditing ? 'Cancel' : 'Edit'}
-            </button>
-          </div>
+            </Button>
+          </CardHeader>
+          <CardBody className={styles.sectionBody}>
 
           {isEditing ? (
             <form onSubmit={handleProfileSave} className={styles.form}>
@@ -155,16 +163,17 @@ const Profile = () => {
               </div>
             </div>
           )}
-        </div>
+        </CardBody>
+      </Card>
 
-        <div className={styles.section}>
-          <div className={styles.sectionHeader}>
-            <h2>Security</h2>
-            <Link to="/auth/change-password" className={styles.changePasswordBtn}>
-              Change Password
-            </Link>
-          </div>
-          
+      <Card variant="default" shadow="md" className={styles.section}>
+        <CardHeader className={styles.sectionHeader}>
+          <CardTitle>Security</CardTitle>
+          <Link to="/auth/change-password" className={styles.changePasswordBtn}>
+            Change Password
+          </Link>
+        </CardHeader>
+        <CardBody className={styles.sectionBody}>
           <div className={styles.securityInfo}>
             <p>Click "Change Password" to update your account password and security settings.</p>
             <div className={styles.securityTips}>
@@ -177,7 +186,8 @@ const Profile = () => {
               </ul>
             </div>
           </div>
-        </div>
+        </CardBody>
+      </Card>
       </div>
     </main>
   );

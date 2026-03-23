@@ -1,5 +1,8 @@
 import React from "react";
 import { useUser } from "../../hooks/useUser";
+import Button from "../../components/common/Button";
+import { Card, CardHeader, CardBody, CardTitle, CardDescription } from "../../components/common/Card";
+import { cn } from "../../utils";
 import "./UsersList.css";
 
 const UsersList = () => {
@@ -7,16 +10,28 @@ const UsersList = () => {
 
   return (
     <div className="users-page">
-      <h2>User Management</h2>
+      <Card variant="default" shadow="md" className="page-header">
+        <CardHeader>
+          <CardTitle>User Management</CardTitle>
+        </CardHeader>
+      </Card>
 
-      <h3>Active Users</h3>
-      <div className="active-users">
-        {activeUsers.map((u) => (
-          <span key={u.id}>{u.name}</span>
-        ))}
-      </div>
+      <Card variant="default" shadow="sm" className="active-users-section">
+        <CardHeader>
+          <CardTitle>Active Users</CardTitle>
+        </CardHeader>
+        <CardBody>
+          <div className="active-users">
+            {activeUsers.map((u) => (
+              <span key={u.id}>{u.name}</span>
+            ))}
+          </div>
+        </CardBody>
+      </Card>
 
-      <table>
+      <Card variant="default" shadow="md" className="users-table-card">
+        <CardBody>
+          <table className="users-table">
         <thead>
           <tr>
             <th>Name</th>
@@ -38,6 +53,7 @@ const UsersList = () => {
                   onChange={(e) =>
                     changeRole(u.id, e.target.value)
                   }
+                  className="role-select"
                 >
                   <option>USER</option>
                   <option>MANAGER</option>
@@ -46,14 +62,16 @@ const UsersList = () => {
               </td>
 
               <td>
-                <button onClick={() => removeUser(u.id)}>
+                <Button onClick={() => removeUser(u.id)} variant="danger" size="sm">
                   Delete
-                </button>
+                </Button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
+        </CardBody>
+      </Card>
     </div>
   );
 };

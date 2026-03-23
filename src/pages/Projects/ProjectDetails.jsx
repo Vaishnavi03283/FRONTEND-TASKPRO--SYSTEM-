@@ -12,6 +12,9 @@ import { getProjectTasks, getTasks } from "../../api/task.api";
 import { getUsers } from "../../api/user.api";
 import { useAuth } from "../../hooks/useAuth";
 import { useProjects } from "../../hooks/useProjects";
+import Button from "../../components/common/Button";
+import { Card, CardHeader, CardBody, CardTitle, CardDescription } from "../../components/common/Card";
+import { cn } from "../../utils";
 import "./ProjectDetails.css";
 
 const ProjectDetails = () => {
@@ -645,19 +648,24 @@ const ProjectDetails = () => {
               </div>
 
               <div className="ps-form-actions">
-                <button 
-                  className="ps-cancel-btn" 
+                <Button 
+                  variant="ghost"
+                  size="md"
                   onClick={() => setEditingProject(false)}
+                  className="ps-cancel-btn"
                 >
                   Cancel
-                </button>
-                <button 
-                  className="ps-save-btn" 
+                </Button>
+                <Button 
+                  variant="primary"
+                  size="md"
                   onClick={handleUpdateProject}
                   disabled={loading}
+                  loading={loading}
+                  className="ps-save-btn"
                 >
                   {loading ? 'Saving...' : 'Save Changes'}
-                </button>
+                </Button>
               </div>
             </div>
           </div>
@@ -665,33 +673,43 @@ const ProjectDetails = () => {
       )}
 
       {/* Project Info Card */}
-      <div className="ps-card">
-        <div className="ps-grid">
-          <div>
-            <label>Start Date</label>
-            <div>{formatDate(project.start_date)}</div>
-          </div>
+      <Card variant="default" shadow="md" className="ps-card">
+        <CardBody className="ps-card-body">
+          <div className="ps-grid">
+            <div>
+              <label>Start Date</label>
+              <div>{formatDate(project.start_date)}</div>
+            </div>
 
-          <div>
-            <label>End Date</label>
-            <div>{formatDate(project.end_date)}</div>
-          </div>
+            <div>
+              <label>End Date</label>
+              <div>{formatDate(project.end_date)}</div>
+            </div>
 
-          <div>
-            <label>Status</label>
-            <span className="ps-status">{project.status}</span>
-          </div>
+            <div>
+              <label>Status</label>
+              <span className={cn("ps-status", styles.statusBadge, {
+                [styles.statusActive]: project.status === 'ACTIVE',
+                [styles.statusCompleted]: project.status === 'COMPLETED',
+                [styles.statusOnHold]: project.status === 'ON-HOLD',
+                [styles.statusPlanned]: project.status === 'PLANNED'
+              })}>{project.status}</span>
+            </div>
 
-          <div>
-            <label>Created</label>
-            <div>{formatDate(project.created_at)}</div>
+            <div>
+              <label>Created</label>
+              <div>{formatDate(project.created_at)}</div>
+            </div>
           </div>
-        </div>
-      </div>
+        </CardBody>
+      </Card>
 
       {/* Team Members */}
-      <div className="ps-card">
-        <h3 className="ps-section-title">Assign Team Members</h3>
+      <Card variant="default" shadow="md" className="ps-card">
+        <CardHeader className="ps-card-header">
+          <CardTitle className="ps-section-title">Assign Team Members</CardTitle>
+        </CardHeader>
+        <CardBody className="ps-card-body">
 
         {/* User Dropdown for Adding Members */}
         {/* <div className="ps-member-management">
@@ -718,45 +736,15 @@ const ProjectDetails = () => {
                 .map(user => (
                   <option key={user.id} value={user.id}>
                     {user.name} ({user.email})
-                  </option>
                 ))}
-            </select>
-          </div>
-          
-          <button 
-            onClick={handleAddMember} 
-            disabled={addingMember || selectedUsers.length === 0}
-            className="ps-add-btn"
-          >
-            {addingMember ? "Adding..." : `Add ${selectedUsers.length > 0 ? `${selectedUsers.length} Member${selectedUsers.length > 1 ? 's' : ''}` : 'Members'}`}
-          </button>
-        </div> */}
-
-        {/* Members List */}
-        <div className="ps-member-list">
-          <div className="ps-member-header">
-            <h4 className="ps-member-list-title">Current Members ({Array.isArray(members) ? members.length : 0})</h4>
-            {canManageProject && (
-              <button 
-                onClick={handleManageMembers}
-                className="ps-manage-btn"
-                title="Manage all project members"
-              >
-                Manage Members
-              </button>
+              </div>
+            ) : (
+              <div className="ps-no-members">
+                <p>No members assigned to this project yet.</p>
+                <p>Use the dropdown above to add team members.</p>
+              </div>
             )}
           </div>
-          {/* {Array.isArray(members) && members.length > 0 ? (
-            <div className="ps-member-grid">
-              {members.map((member) => (
-                <div key={member.id || member.user_id} className="ps-member-card">
-                  <div className="ps-member-info">
-                    <div className="ps-member-avatar">
-                      {member.name?.charAt(0)?.toUpperCase() || 'U'}
-                    </div>
-                    <div className="ps-member-details">
-                      <div className="ps-member-name">
-                        {member.name || member.username || "Unknown User"}
                       </div>
                       <div className="ps-member-email">
                         {member.email || 'No email'}
@@ -786,29 +774,30 @@ const ProjectDetails = () => {
               <p>Use the dropdown above to add team members.</p>
             </div>
           )} */}
-        </div>
-      </div>
+        </CardBody>
+      </Card>
 
       {/* Tasks Section */}
-      <div className="ps-card">
-        <div className="ps-flex">
-          <h3 className="ps-section-title">Tasks</h3>
-
-          <div className="ps-task-actions">
-            {canManageProject && (
-              <button className="ps-primary-btn" onClick={handleCreateTask}>
-                + Create Task
-              </button>
-            )}
-            <button className="ps-secondary-btn" onClick={handleViewTasks}>
-              View Tasks
-            </button>
+      <Card variant="default" shadow="md" className="ps-card">
+        <CardHeader className="ps-card-header">
+          <div className="ps-flex">
+            <CardTitle className="ps-section-title">Tasks</CardTitle>
+            <div className="ps-task-actions">
+              {canManageProject && (
+                <Button className="ps-primary-btn" onClick={handleCreateTask} variant="primary" size="md">
+                  + Create Task
+                </Button>
+              )}
+              <Button className="ps-secondary-btn" onClick={handleViewTasks} variant="secondary" size="md">
+                View Tasks
+              </Button>
+            </div>
           </div>
-        </div>
-
-        {Array.isArray(tasks) && tasks.length > 0 ? (
-          <div className="ps-task-list">
-            {tasks.map((task) => (
+        </CardHeader>
+        <CardBody className="ps-card-body">
+          {Array.isArray(tasks) && tasks.length > 0 ? (
+            <div className="ps-task-list">
+              {tasks.map((task) => (
               <div key={task.id || task.task_id} className="ps-task-card">
                 <div className="ps-task-top">
                   <h4>{task.title || task.name}</h4>
@@ -818,10 +807,11 @@ const ProjectDetails = () => {
               </div>
             ))}
           </div>
-        ) : (
-          <p className="ps-empty">No tasks available</p>
-        )}
-      </div>
+          ) : (
+            <p className="ps-empty">No tasks available</p>
+          )}
+        </CardBody>
+      </Card>
     </div>
   );
 };

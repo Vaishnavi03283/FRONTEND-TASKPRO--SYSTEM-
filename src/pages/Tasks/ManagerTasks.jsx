@@ -4,6 +4,9 @@ import { getTasks, updateStatus, deleteTask } from "../../api/task.api";
 import { getUsers } from "../../api/user.api";
 import TaskCard from "../../components/common/TaskCard";
 import { useNavigate } from "react-router-dom";
+import Button from "../../components/common/Button";
+import { Card, CardHeader, CardBody, CardTitle, CardDescription } from "../../components/common/Card";
+import { cn } from "../../utils";
 import "./ManagerTasks.css";
 
 const ManagerTasks = () => {
@@ -148,10 +151,14 @@ const ManagerTasks = () => {
   if (loading) {
     return (
       <div className="manager-tasks-page">
-        <div className="loading">
-          <div className="spinner"></div>
-          <p>Loading your tasks...</p>
-        </div>
+        <Card variant="default" shadow="md" className="loading-card">
+          <CardBody className="loading-body">
+            <div className="loading">
+              <div className="spinner"></div>
+              <p>Loading your tasks...</p>
+            </div>
+          </CardBody>
+        </Card>
       </div>
     );
   }
@@ -159,35 +166,38 @@ const ManagerTasks = () => {
   if (error) {
     return (
       <div className="manager-tasks-page">
-        <div className="error">
-          <p>{error}</p>
-          <button onClick={fetchManagerTasks} className="retry-btn">
-            Retry
-          </button>
-        </div>
+        <Card variant="error" shadow="md" className="error-card">
+          <CardBody className="error-body">
+            <div className="error">
+              <p>{error}</p>
+              <Button onClick={fetchManagerTasks} variant="primary" size="md" className="retry-btn">
+                Retry
+              </Button>
+            </div>
+          </CardBody>
+        </Card>
       </div>
     );
   }
 
   return (
     <div className="manager-tasks-page">
-      <div className="manager-tasks-header">
-        <div className="header-content">
+      <Card variant="default" shadow="md" className="manager-tasks-header">
+        <CardHeader className="header-content">
           <div className="header-text">
-            <h2>My Created Tasks</h2>
-            <p className="header-subtitle">
-              Manage tasks you have created
-            </p>
+            <CardTitle>My Created Tasks</CardTitle>
+            <CardDescription>Manage tasks you have created</CardDescription>
           </div>
-          <button
-            onClick={() => navigate("/tasks/create")}
+          <Button 
+            onClick={() => navigate('/tasks/create')} 
+            variant="primary" 
+            size="md"
             className="create-task-btn"
           >
-            <span className="btn-icon">+</span>
-            Create Task
-          </button>
-        </div>
-      </div>
+            + Create Task
+          </Button>
+        </CardHeader>
+      </Card>
 
       {/* Statistics Cards */}
       <div className="stats-section">

@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getMembers, removeMember } from "../../api/project.api";
+import Button from "../../components/common/Button";
+import { Card, CardHeader, CardBody, CardTitle, CardDescription } from "../../components/common/Card";
+import { cn } from "../../utils";
 import "./ManageMembers.css";
 
 const ManageMembers = () => {
@@ -89,38 +92,45 @@ const ManageMembers = () => {
 
   return (
     <div className="manage-members-container">
-      <div className="manage-members-header">
-        <button 
-          className="back-arrow" 
-          onClick={handleBack}
-          title="Back to Project"
-        >
-          ←
-        </button>
-        <h1>Manage Project Members</h1>
-        <button 
-          className="assign-btn"
-          onClick={handleAssignMembers}
-        >
-          + Assign Members
-        </button>
-      </div>
+      <Card variant="default" shadow="md" className="manage-members-header">
+        <CardBody className="manage-members-header-body">
+          <Button 
+            variant="ghost" 
+            size="sm"
+            className="back-arrow" 
+            onClick={handleBack}
+            title="Back to Project"
+          >
+            ←
+          </Button>
+          <CardTitle className="page-title">Manage Project Members</CardTitle>
+          <Button 
+            variant="primary"
+            size="md"
+            className="assign-btn"
+            onClick={handleAssignMembers}
+          >
+            + Assign Members
+          </Button>
+        </CardBody>
+      </Card>
 
-      <div className="manage-members-content">
-        {success && (
-          <div className="success-message">
-            <div className="success-icon">✓</div>
-            <p>Member removed successfully!</p>
-          </div>
-        )}
+      <Card variant="default" shadow="lg" className="manage-members-content">
+        <CardBody className="manage-members-body">
+          {success && (
+            <div className={cn("success-message", styles.successAlert)}>
+              <div className="success-icon">✓</div>
+              <p>Member removed successfully!</p>
+            </div>
+          )}
 
-        {error && (
-          <div className="error-message">
-            <div className="error-icon">⚠</div>
-            <p>{error}</p>
-            <button onClick={() => setError(null)} className="close-btn">×</button>
-          </div>
-        )}
+          {error && (
+            <div className={cn("error-message", styles.errorAlert)}>
+              <div className="error-icon">⚠</div>
+              <p>{error}</p>
+              <Button onClick={() => setError(null)} variant="ghost" size="sm" className="close-btn">×</Button>
+            </div>
+          )}
 
         {/* Members Summary */}
         <div className="members-summary">
@@ -183,23 +193,17 @@ const ManageMembers = () => {
                   </div>
                   
                   <div className="member-cell actions-cell">
-                    <button 
+                    <Button 
                       onClick={() => handleRemoveMember(member.id, member.name)}
-                      className="remove-btn"
+                      variant="danger"
+                      size="sm"
                       disabled={removingUserId === member.id}
+                      loading={removingUserId === member.id}
+                      className="remove-btn"
                       title="Remove member"
                     >
-                      {removingUserId === member.id ? (
-                        <>
-                          <div className="spinner-small"></div>
-                          Removing...
-                        </>
-                      ) : (
-                        <>
-                          🗑️ Remove
-                        </>
-                      )}
-                    </button>
+                      {removingUserId === member.id ? 'Removing...' : '🗑️ Remove'}
+                    </Button>
                   </div>
                 </div>
               ))}
@@ -209,14 +213,17 @@ const ManageMembers = () => {
 
         {/* Action Buttons */}
         <div className="action-buttons">
-          <button 
+          <Button 
             onClick={handleBack}
+            variant="secondary"
+            size="md"
             className="back-btn"
           >
             Back to Project
-          </button>
+          </Button>
         </div>
-      </div>
+        </CardBody>
+      </Card>
     </div>
   );
 };

@@ -4,6 +4,9 @@ import { useUIStore } from "../../store/uiStore";
 import { useAuthStore } from "../../store/authStore";
 import { getUserDashboard } from "../../api/dashboard.api";
 import { getTasks, updateStatus } from "../../api/task.api";
+import Button from "../../components/common/Button";
+import { Card, CardHeader, CardBody, CardTitle, CardDescription } from "../../components/common/Card";
+import { cn } from "../../utils";
 import styles from "./UserDashboard.module.css";
 
 const UserDashboard = () => {
@@ -287,68 +290,85 @@ const UserDashboard = () => {
 
       {/* Enhanced Stats Grid */}
       <div className={styles.statsGrid}>
-        <div className={styles.statCard}>
-          <div className={`${styles.statIcon} ${styles.totalTasks}`}>
-            📋
-          </div>
-          <div className={styles.statContent}>
-            <h3>{stats?.totalTasks || 0}</h3>
-            <p>Total Tasks</p>
-          </div>
-        </div>
+        <Card variant="default" shadow="md" hover className={styles.statCard}>
+          <CardBody className={styles.statCardBody}>
+            <div className={`${styles.statIcon} ${styles.totalTasks}`}>
+              📋
+            </div>
+            <div className={styles.statContent}>
+              <h3>{stats?.totalTasks || 0}</h3>
+              <p>Total Tasks</p>
+              <span className={styles.statChange}>+{stats?.pendingTasks || 0} pending</span>
+            </div>
+          </CardBody>
+        </Card>
 
-        <div className={styles.statCard}>
-          <div className={`${styles.statIcon} ${styles.completedTasks}`}>
-            ✅
-          </div>
-          <div className={styles.statContent}>
-            <h3>{stats?.completedTasks || 0}</h3>
-            <p>Completed Tasks</p>
-            <span className={styles.statChange}>+12%</span>
-          </div>
-        </div>
+        <Card variant="success" shadow="md" hover className={styles.statCard}>
+          <CardBody className={styles.statCardBody}>
+            <div className={`${styles.statIcon} ${styles.completedTasks}`}>
+              ✅
+            </div>
+            <div className={styles.statContent}>
+              <h3>{stats?.completedTasks || 0}</h3>
+              <p>Completed</p>
+              <span className={styles.statChange}>{stats?.totalTasks > 0 ? Math.round((stats.completedTasks / stats.totalTasks) * 100) : 0}% rate</span>
+            </div>
+          </CardBody>
+        </Card>
 
-        <div className={`${styles.statCard} ${styles.darkBlueCard}`}>
-          <div className={`${styles.statIcon} ${styles.inProgressTasks}`}>
-            🔄
-          </div>
-          <div className={styles.statContent}>
-            <h3>{String(stats?.inProgressTasks || 0).padStart(2, '0')}</h3>
-            <p>In Progress</p>
-          </div>
-        </div>
+        <Card variant="warning" shadow="md" hover className={styles.statCard}>
+          <CardBody className={styles.statCardBody}>
+            <div className={`${styles.statIcon} ${styles.inProgressTasks}`}>
+              ⏳
+            </div>
+            <div className={styles.statContent}>
+              <h3>{stats?.inProgressTasks || 0}</h3>
+              <p>In Progress</p>
+              <span className={styles.statChange}>Active now</span>
+            </div>
+          </CardBody>
+        </Card>
 
-        <div className={styles.statCard}>
-          <div className={`${styles.statIcon} ${styles.pendingTasks}`}>
-            ⏳
+        <Card variant="primary" shadow="md" hover className={styles.statCard}>
+          <CardBody className={styles.statCardBody}>
+            <div className={`${styles.statIcon} ${styles.activeProjects}`}>
+              📁
+            </div>
+            <div className={styles.statContent}>
+              <h3>{stats?.activeProjects || 0}</h3>
+              <p>Projects</p>
+              <span className={styles.statChange}>This sprint</span>
+            </div>
+          </CardBody>
+        </Card>
+      </div>
           </div>
-          <div className={styles.statContent}>
-            <h3>{String(stats?.pendingTasks || 0).padStart(2, '0')}</h3>
-            <p>Pending Tasks</p>
-          </div>
-        </div>
       </div>
 
       {/* Main Content Grid */}
       <div className={styles.dashboardGrid}>
         {/* Left Column - Assigned Tasks */}
         <div className={styles.leftColumn}>
-          <div className={styles.section}>
-            <div className={styles.sectionHeader}>
-              <h2 className={styles.sectionTitle}>Assigned Tasks</h2>
-              <button 
+          <Card variant="default" shadow="md" className={styles.section}>
+            <CardHeader className={styles.sectionHeader}>
+              <CardTitle className={styles.sectionTitle}>Assigned Tasks</CardTitle>
+              <Button 
+                variant="ghost"
+                size="sm"
                 onClick={() => navigate('/tasks')}
                 className={styles.viewAllBtn}
               >
                 View All
-              </button>
-            </div>
-
-            {filteredTasks.length > 0 ? (
-              <div className={styles.tasksList}>
-                {filteredTasks.map((task) => (
-                  <div key={task.id} className={styles.taskItem}>
-                    <div className={styles.taskHeader}>
+              </Button>
+            </CardHeader>
+            
+            <CardBody className={styles.sectionBody}>
+              {filteredTasks.length > 0 ? (
+                <div className={styles.tasksList}>
+                  {filteredTasks.map((task) => (
+                    <Card key={task.id} variant="default" shadow="sm" hover className={styles.taskItem}>
+                      <CardBody className={styles.taskBody}>
+                        <div className={styles.taskHeader}>
                       <h3 className={styles.taskTitle}>{task.title}</h3>
                       <span className={`${styles.taskStatus} ${getStatusColor(task.status)}`}>
                         {task.status.replace('_', ' ')}

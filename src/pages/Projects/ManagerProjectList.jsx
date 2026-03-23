@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { projectAPI } from '../../api/project.api';
+import Button from '../../components/common/Button';
+import { Card, CardHeader, CardBody, CardTitle, CardDescription } from '../../components/common/Card';
+import { cn } from '../../utils';
 import './ManagerProjectList.css';
 
 const ManagerProjectList = () => {
@@ -148,10 +151,14 @@ const ManagerProjectList = () => {
   if (loading) {
     return (
       <div className="manager-project-list">
-        <div className="loading-container">
-          <div className="spinner"></div>
-          <p>Loading projects...</p>
-        </div>
+        <Card variant="default" shadow="md" className="loading-card">
+          <CardBody className="loading-body">
+            <div className="loading-container">
+              <div className="spinner"></div>
+              <p>Loading projects...</p>
+            </div>
+          </CardBody>
+        </Card>
       </div>
     );
   }
@@ -159,20 +166,26 @@ const ManagerProjectList = () => {
   if (error) {
     return (
       <div className="manager-project-list">
-        <div className="error-container">
-          <p>{error}</p>
-          <button onClick={fetchProjects}>Retry</button>
-        </div>
+        <Card variant="error" shadow="md" className="error-card">
+          <CardBody className="error-body">
+            <div className="error-container">
+              <p>{error}</p>
+              <Button onClick={fetchProjects} variant="primary" size="md">Retry</Button>
+            </div>
+          </CardBody>
+        </Card>
       </div>
     );
   }
 
   return (
     <div className="manager-project-list">
-      <div className="project-header">
-        <h1>Project Management</h1>
-        <p>Manage and track all your projects</p>
-      </div>
+      <Card variant="default" shadow="md" className="project-header">
+        <CardHeader>
+          <CardTitle>Project Management</CardTitle>
+          <CardDescription>Manage and track all your projects</CardDescription>
+        </CardHeader>
+      </Card>
 
       <div className="project-controls">
         <div className="search-filter">
@@ -196,13 +209,14 @@ const ManagerProjectList = () => {
           </select>
         </div>
         
-        <button className="create-project-btn" onClick={handleCreateProject}>
+        <Button className="create-project-btn" onClick={handleCreateProject} variant="primary" size="md">
           <span className="btn-icon">➕</span>
           Create Project
-        </button>
+        </Button>
       </div>
 
-      <div className="projects-table-container">
+      <Card variant="default" shadow="md" className="projects-table-container">
+        <CardBody className="projects-table-body">
         <table className="projects-table">
           <thead>
             <tr>
@@ -250,47 +264,58 @@ const ManagerProjectList = () => {
                   </span>
                 </td>
                 <td className="actions-cell">
-                  <button 
-                    className="action-btn view"
-                    onClick={() => handleProjectClick(project.project_id)}
+                  <Button 
+                    className="action-btn view" 
+                    onClick={() => navigate(`/projects/${project.project_id}`)}
+                    variant="ghost"
+                    size="sm"
                     title="View Project"
                   >
                     👁️
-                  </button>
-                  <button 
-                    className="action-btn edit"
-                    onClick={(e) => handleEditProject(project.project_id, e)}
+                  </Button>
+                  <Button 
+                    className="action-btn edit" 
+                    onClick={() => navigate(`/projects/${project.project_id}/edit`)}
+                    variant="ghost"
+                    size="sm"
                     title="Edit Project"
                   >
                     ✏️
-                  </button>
-                  <button 
-                    className="action-btn delete"
+                  </Button>
+                  <Button 
+                    className="action-btn delete" 
                     onClick={(e) => handleDeleteProject(project.project_id, e)}
+                    variant="danger"
+                    size="sm"
                     title="Delete Project"
                   >
                     🗑️
-                  </button>
+                  </Button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
-      </div>
+        </CardBody>
+      </Card>
 
       {filteredProjects.length === 0 && (
-        <div className="empty-state">
-          <div className="empty-icon">📁</div>
-          <h3>No projects found</h3>
-          <p>
-            {searchTerm || filterStatus !== 'all' 
-              ? 'Try adjusting your search or filters' 
-              : 'Create your first project to get started'}
-          </p>
-          <button className="create-first-btn" onClick={handleCreateProject}>
-            Create Your First Project
-          </button>
-        </div>
+        <Card variant="default" shadow="sm" className="empty-state">
+          <CardBody className="empty-body">
+            <div className="empty-content">
+              <div className="empty-icon">📁</div>
+              <h3>No projects found</h3>
+              <p>
+                {searchTerm || filterStatus !== 'all' 
+                  ? 'Try adjusting your search or filters' 
+                  : 'Create your first project to get started'}
+              </p>
+              <Button className="create-first-btn" onClick={handleCreateProject} variant="primary" size="md">
+                Create Your First Project
+              </Button>
+            </div>
+          </CardBody>
+        </Card>
       )}
 
       {/* Create Project Modal */}

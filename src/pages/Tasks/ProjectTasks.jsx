@@ -3,6 +3,9 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { getProjectTasks, updateStatus, deleteTask } from '../../api/task.api';
 import { getProjectById } from '../../api/project.api';
 import { useAuth } from '../../hooks/useAuth';
+import Button from '../../components/common/Button';
+import { Card, CardHeader, CardBody, CardTitle, CardDescription } from '../../components/common/Card';
+import { cn } from '../../utils';
 import './ProjectTasks.css';
 
 const ProjectTasks = () => {
@@ -152,10 +155,14 @@ const ProjectTasks = () => {
   if (loading) {
     return (
       <div className="project-tasks">
-        <div className="loading-container">
-          <div className="spinner"></div>
-          <p>Loading project tasks...</p>
-        </div>
+        <Card variant="default" shadow="md" className="loading-card">
+          <CardBody className="loading-body">
+            <div className="loading-container">
+              <div className="spinner"></div>
+              <p>Loading project tasks...</p>
+            </div>
+          </CardBody>
+        </Card>
       </div>
     );
   }
@@ -163,10 +170,14 @@ const ProjectTasks = () => {
   if (error) {
     return (
       <div className="project-tasks">
-        <div className="error-container">
-          <p>{error}</p>
-          <button onClick={fetchProjectAndTasks}>Retry</button>
-        </div>
+        <Card variant="error" shadow="md" className="error-card">
+          <CardBody className="error-body">
+            <div className="error-container">
+              <p>{error}</p>
+              <Button onClick={fetchProjectAndTasks} variant="primary" size="md">Retry</Button>
+            </div>
+          </CardBody>
+        </Card>
       </div>
     );
   }

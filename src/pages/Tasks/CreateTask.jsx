@@ -5,6 +5,9 @@ import { createTask, assignTask, assignTaskToMultipleUsers } from '../../api/tas
 import { getProjects } from '../../api/project.api';
 import { getUsers } from '../../api/user.api';
 import { useAuth } from '../../hooks/useAuth';
+import Button from '../../components/common/Button';
+import { Card, CardHeader, CardBody, CardTitle, CardDescription } from '../../components/common/Card';
+import { cn } from '../../utils';
 import './CreateTask.css';
 
 const CreateTask = () => {
@@ -566,34 +569,37 @@ const CreateTask = () => {
 
   return (
     <div className="create-task-container">
-      <div className="create-task-header">
-        <button onClick={handleCancel} className="back-btn">
-          ← Back
-        </button>
-        <h1>Create New Task</h1>
-      </div>
+      <Card variant="default" shadow="md" className="create-task-header">
+        <CardBody className="create-task-header-body">
+          <Button onClick={handleCancel} variant="ghost" size="sm" className="back-btn">
+            ← Back
+          </Button>
+          <CardTitle className="page-title">Create New Task</CardTitle>
+        </CardBody>
+      </Card>
 
-      <div className="create-task-form">
-        {submitSuccess && (
-          <div className="success-message">
-            <div className="success-icon">✓</div>
-            <p>{submitMessage || 'Task created successfully! Redirecting...'}</p>
-          </div>
-        )}
+      <Card variant="primary" shadow="lg" className="create-task-form">
+        <CardBody className="create-task-form-body">
+          {submitSuccess && (
+            <div className={cn("success-message", styles.successAlert)}>
+              <div className="success-icon">✓</div>
+              <p>{submitMessage || 'Task created successfully! Redirecting...'}</p>
+            </div>
+          )}
 
-        {errors.api && (
-          <div className="error-message">
-            <div className="error-icon">⚠</div>
-            <p>{errors.api.message}</p>
-          </div>
-        )}
+          {errors.api && (
+            <div className={cn("error-message", styles.errorAlert)}>
+              <div className="error-icon">⚠</div>
+              <p>{errors.api.message}</p>
+            </div>
+          )}
 
-        <form onSubmit={handleSubmit(onSubmit)}>
-          {/* Title Field */}
-          <div className="form-group">
-            <label htmlFor="title" className="form-label">
-              Task Title <span className="required">*</span>
-            </label>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            {/* Title Field */}
+            <div className="form-group">
+              <label htmlFor="title" className="form-label">
+                Task Title <span className="required">*</span>
+              </label>
             <input
               type="text"
               id="title"
@@ -988,43 +994,44 @@ const CreateTask = () => {
               >
                 🎲 Assign 2 Random
               </button>
-              <button
+              <Button
                 type="button"
-                className="random-btn"
+                variant="secondary"
+                size="sm"
                 onClick={() => handleAssignRandomUsers(3)}
                 disabled={isSubmitting}
                 title="Assign 3 random users with role USER"
+                className="random-btn"
               >
                 🎲 Assign 3 Random
-              </button>
-              <button
+              </Button>
+              <Button
                 type="button"
-                className="random-btn"
+                variant="secondary"
+                size="sm"
                 onClick={() => handleAssignRandomUsers(5)}
                 disabled={isSubmitting}
                 title="Assign 5 random users with role USER"
+                className="random-btn"
               >
                 🎲 Assign 5 Random
-              </button>
+              </Button>
             </div>
             
-            <button
+            <Button
               type="submit"
-              className="submit-btn"
+              variant="primary"
+              size="lg"
               disabled={isSubmitting || submitSuccess}
+              loading={isSubmitting}
+              className="submit-btn"
             >
-              {isSubmitting ? (
-                <>
-                  <div className="spinner"></div>
-                  Creating...
-                </>
-              ) : (
-                'Create Task'
-              )}
-            </button>
+              {isSubmitting ? 'Creating...' : 'Create Task'}
+            </Button>
           </div>
         </form>
-      </div>
+        </CardBody>
+      </Card>
 
       {/* Context Menu for Right-Click Options */}
       {contextMenu.visible && (

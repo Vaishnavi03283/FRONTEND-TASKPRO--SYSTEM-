@@ -2,6 +2,9 @@ import React, { useCallback, useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAdminStats } from "../../hooks/useAdmin";
 import { AuthContext } from "../../context/AuthContext";
+import Button from "../../components/common/Button";
+import { Card, CardHeader, CardBody, CardTitle, CardDescription } from "../../components/common/Card";
+import { cn } from "../../utils";
 import styles from "./AdminDashboard.module.css";
 
 /**
@@ -148,7 +151,9 @@ const AdminDashboard = () => {
           </div>
           
           {/* Notifications */}
-          <button 
+          <Button 
+            variant="ghost"
+            size="sm"
             className={styles.iconButton}
             onClick={() => setShowNotifications(!showNotifications)}
           >
@@ -163,10 +168,12 @@ const AdminDashboard = () => {
                 </div>
               </div>
             )}
-          </button>
+          </Button>
           
           {/* Settings */}
-          <button 
+          <Button 
+            variant="ghost"
+            size="sm"
             className={styles.iconButton}
             onClick={() => setShowSettings(!showSettings)}
           >

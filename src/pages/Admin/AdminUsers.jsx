@@ -2,6 +2,9 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAllUsers, useAdminUserActions } from '../../hooks/useAdmin';
 import { useAdmin } from '../../context/AdminContext';
+import Button from '../../components/common/Button';
+import { Card, CardHeader, CardBody, CardTitle, CardDescription } from '../../components/common/Card';
+import { cn } from '../../utils';
 import styles from './AdminUsers.module.css';
 
 const AdminUsers = () => {
@@ -223,31 +226,30 @@ const AdminUsers = () => {
         </div>
 
         <div className="bulk-actions">
-          <button 
-            onClick={handleSelectAll}
-            className="bulk-btn select-all-btn"
-            disabled={users.length === 0}
-          >
-            Select All ({users.length})
-          </button>
-          <button 
-            onClick={handleClearSelection}
-            className="bulk-btn clear-btn"
+          <Button 
+            onClick={() => setSelectedUsers([])}
+            variant="ghost"
+            size="sm"
             disabled={selectedUsers.length === 0}
           >
-            Clear Selection ({selectedUsers.length})
-          </button>
-          <select
-            onChange={(e) => handleBulkRoleChange(e.target.value)}
-            className="bulk-btn role-select"
-            disabled={selectedUsers.length === 0}
-            value=""
+            Clear Selection
+          </Button>
+          <Button 
+            onClick={() => handleBulkAction('activate')}
+            variant="success"
+            size="sm"
+            disabled={selectedUsers.length === 0 || actionLoading}
           >
-            <option value="">Change Role ({selectedUsers.length})</option>
-            <option value="USER">Set as User</option>
-            <option value="MANAGER">Set as Manager</option>
-            <option value="ADMIN">Set as Admin</option>
-          </select>
+            Activate Selected
+          </Button>
+          <Button 
+            onClick={() => handleBulkAction('deactivate')}
+            variant="warning"
+            size="sm"
+            disabled={selectedUsers.length === 0 || actionLoading}
+          >
+            Deactivate Selected
+          </Button>
         </div>
       </div>
 
