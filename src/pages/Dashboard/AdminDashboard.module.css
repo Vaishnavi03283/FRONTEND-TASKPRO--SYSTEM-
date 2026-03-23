@@ -1,6 +1,6 @@
-/* UserDashboard.module.css - Production Ready Styling with Advanced Features */
+/* AdminDashboard.module.css - Production Ready Styling with Advanced Features */
 
-.userDashboard {
+.adminDashboard {
   padding: 2rem;
   max-width: 1400px;
   margin: 0 auto;
@@ -150,6 +150,56 @@
   font-size: 0.875rem;
 }
 
+/* Refresh Controls */
+.refreshControls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.refreshBtn {
+  padding: 0.75rem;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.refreshBtn:hover {
+  background: #2563eb;
+}
+
+.refreshBtn.spinning {
+  animation: spin 1s linear infinite;
+}
+
+.refreshBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.autoRefreshToggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+.autoRefreshToggle input {
+  margin: 0;
+}
+
 /* Profile Button */
 .profileButton {
   padding: 0.5rem;
@@ -162,13 +212,21 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  background: linear-gradient(135deg, #dc2626, #991b1b);
   color: white;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 600;
   font-size: 1rem;
+}
+
+/* Last Updated */
+.lastUpdated {
+  text-align: right;
+  font-size: 0.75rem;
+  color: #64748b;
+  margin-bottom: 1rem;
 }
 
 /* Enhanced Stats Grid */
@@ -188,6 +246,7 @@
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
+  cursor: pointer;
 }
 
 .statCard:hover {
@@ -195,13 +254,13 @@
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
 
-.darkBlueCard {
-  background: linear-gradient(135deg, #1e40af, #1e3a8a);
+.healthCard {
+  background: linear-gradient(135deg, #10b981, #059669);
   color: white;
 }
 
-.darkBlueCard .statContent h3,
-.darkBlueCard .statContent p {
+.healthCard .statContent h3,
+.healthCard .statContent p {
   color: white;
 }
 
@@ -222,23 +281,23 @@
   font-size: 1.5rem;
 }
 
-.statIcon.totalTasks {
+.statIcon.totalUsers {
   background: linear-gradient(135deg, #3b82f6, #2563eb);
   color: white;
 }
 
-.statIcon.completedTasks {
-  background: linear-gradient(135deg, #10b981, #059669);
+.statIcon.activeProjects {
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
   color: white;
 }
 
-.statIcon.inProgressTasks {
+.statIcon.totalTasks {
   background: linear-gradient(135deg, #f59e0b, #d97706);
   color: white;
 }
 
-.statIcon.pendingTasks {
-  background: linear-gradient(135deg, #ef4444, #dc2626);
+.statIcon.systemHealth {
+  background: linear-gradient(135deg, #10b981, #059669);
   color: white;
 }
 
@@ -297,7 +356,7 @@
 
 .sectionHeader {
   display: flex;
-  justify-content: between;
+  justify-content: space-between;
   align-items: center;
   margin-bottom: 1.5rem;
   padding-bottom: 1rem;
@@ -328,126 +387,68 @@
   transform: translateY(-1px);
 }
 
-/* Tasks List */
-.tasksList {
-  display: flex;
-  flex-direction: column;
+/* System Metrics */
+.systemMetrics {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: 1rem;
 }
 
-.taskItem {
+.metricItem {
   padding: 1rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
   background: #f8fafc;
-  transition: all 0.2s ease;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
 }
 
-.taskItem:hover {
-  border-color: #cbd5e1;
-  background: white;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-}
-
-.taskHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 0.75rem;
-}
-
-.taskTitle {
-  font-size: 1rem;
-  font-weight: 600;
-  color: #1e293b;
-  margin: 0;
-  line-height: 1.4;
-  flex: 1;
-}
-
-.taskDescription {
-  font-size: 0.875rem;
-  color: #64748b;
-  margin: 0 0 1rem 0;
-  line-height: 1.5;
-}
-
-.taskMeta {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-}
-
-.taskDate {
+.metricLabel {
   font-size: 0.75rem;
   color: #64748b;
-  font-weight: 500;
-}
-
-.taskCategory {
-  font-size: 0.75rem;
-  color: #3b82f6;
-  background: rgba(59, 130, 246, 0.1);
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
-  font-weight: 600;
-}
-
-.taskActions {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  justify-content: space-between;
-}
-
-.priorityBadge {
-  font-size: 0.75rem;
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
+  margin-bottom: 0.5rem;
   font-weight: 600;
   text-transform: uppercase;
 }
 
-.statusActions {
+.metricValue {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+/* Quick Actions */
+.quickActions {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.actionBtn {
+  padding: 1rem;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
   display: flex;
+  flex-direction: column;
+  align-items: center;
   gap: 0.5rem;
 }
 
-.statusBtn {
-  padding: 0.5rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 6px;
-  background: white;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  font-size: 1rem;
-}
-
-.statusBtn:hover {
+.actionBtn:hover {
   background: #f8fafc;
   border-color: #cbd5e1;
+  transform: translateY(-1px);
 }
 
-.statusBtn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+.actionIcon {
+  font-size: 1.5rem;
 }
 
-.viewTaskBtn {
-  padding: 0.5rem 1rem;
-  background: #64748b;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-size: 0.75rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.viewTaskBtn:hover {
-  background: #475569;
+.actionLabel {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #374151;
 }
 
 /* Timeline */
@@ -591,53 +592,6 @@
   box-shadow: 0 2px 0 #d1d5db;
 }
 
-/* Status Colors */
-.completedStatus {
-  background: rgba(16, 185, 129, 0.1);
-  color: #10b981;
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-transform: uppercase;
-}
-
-.inProgressStatus {
-  background: rgba(245, 158, 11, 0.1);
-  color: #f59e0b;
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-transform: uppercase;
-}
-
-.pendingStatus {
-  background: rgba(239, 68, 68, 0.1);
-  color: #ef4444;
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-transform: uppercase;
-}
-
-/* Priority Colors */
-.highPriority {
-  background: rgba(239, 68, 68, 0.1);
-  color: #ef4444;
-}
-
-.mediumPriority {
-  background: rgba(245, 158, 11, 0.1);
-  color: #f59e0b;
-}
-
-.lowPriority {
-  background: rgba(16, 185, 129, 0.1);
-  color: #10b981;
-}
-
 /* Loading and Error States */
 .loading {
   display: flex;
@@ -660,15 +614,6 @@
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
-}
-
-.updatingSpinner {
-  width: 16px;
-  height: 16px;
-  border: 2px solid #e2e8f0;
-  border-top: 2px solid #3b82f6;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
 }
 
 .error {
@@ -705,54 +650,6 @@
   transform: translateY(-2px);
 }
 
-/* Empty States */
-.emptyState {
-  text-align: center;
-  padding: 3rem 2rem;
-  color: #64748b;
-}
-
-.emptyIcon {
-  margin-bottom: 1rem;
-  opacity: 0.5;
-}
-
-.emptyIcon svg {
-  width: 64px;
-  height: 64px;
-  color: #cbd5e1;
-}
-
-.emptyTitle {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #374151;
-  margin: 0 0 0.5rem 0;
-}
-
-.emptyDescription {
-  font-size: 0.875rem;
-  color: #6b7280;
-  margin: 0 0 1.5rem 0;
-  line-height: 1.5;
-}
-
-.emptyAction {
-  padding: 0.75rem 1.5rem;
-  background: #3b82f6;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.emptyAction:hover {
-  background: #2563eb;
-  transform: translateY(-1px);
-}
-
 /* Responsive Design */
 @media (max-width: 1200px) {
   .dashboardGrid {
@@ -766,10 +663,15 @@
   .searchInput {
     width: 200px;
   }
+  
+  .systemMetrics,
+  .quickActions {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 768px) {
-  .userDashboard {
+  .adminDashboard {
     padding: 1rem;
   }
   
@@ -802,14 +704,9 @@
     grid-template-columns: 1fr;
   }
   
-  .taskActions {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0.5rem;
-  }
-  
-  .statusActions {
-    justify-content: center;
+  .systemMetrics,
+  .quickActions {
+    grid-template-columns: 1fr;
   }
   
   .dashboardTitle {

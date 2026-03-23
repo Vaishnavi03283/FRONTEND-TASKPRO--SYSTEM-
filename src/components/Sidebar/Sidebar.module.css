@@ -29,25 +29,45 @@
   padding: 1rem 0;
 }
 
-.navItem {
+.navLink {
   display: block;
   padding: 0.75rem 1.5rem;
   color: rgba(255, 255, 255, 0.8);
   text-decoration: none;
   transition: all 0.3s ease;
   border-left: 3px solid transparent;
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-align: left;
+  width: 100%;
 }
 
-.navItem:hover {
+.navLink:hover {
   background: rgba(255, 255, 255, 0.1);
   color: white;
   border-left-color: white;
 }
 
-.navItem.active {
+.navLink.active {
   background: rgba(255, 255, 255, 0.2);
   color: white;
   border-left-color: white;
+}
+
+.logoutBtn {
+  margin-top: 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 1rem;
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.logoutBtn:hover {
+  background: rgba(239, 68, 68, 0.2);
+  color: #dc2626;
 }
 
 .navSection {

@@ -16,7 +16,7 @@ export default function Sidebar() {
         },
         {
           path: "/tasks",
-          label: "My Tasks",
+          label: "Tasks",
           roles: ["USER"]
         }
       ],
@@ -37,21 +37,6 @@ export default function Sidebar() {
           path: "/dashboard/admin",
           label: "Dashboard",
           roles: ["ADMIN"]
-        },
-        {
-          path: "/admin/users",
-          label: "User Management",
-          roles: ["ADMIN"]
-        },
-        {
-          path: "/projects",
-          label: "Projects",
-          roles: ["ADMIN"]
-        },
-        {
-          path: "/tasks",
-          label: "Tasks",
-          roles: ["ADMIN"]
         }
       ]
     };
@@ -68,7 +53,7 @@ export default function Sidebar() {
 
   return (
     <nav className={styles.sidebar}>
-      <h2 className={styles.logo}>TaskFlow</h2>
+      <h2 className={styles.logo}>TaskPro</h2>
 
       <div className={styles.nav}>
         {navigationItems.map((item) => (
@@ -83,15 +68,16 @@ export default function Sidebar() {
           )
         ))}
         
-        {/* Profile Link */}
-        {user && (
-          <Link
-            to="/auth/me"
-            className={`${styles.navLink} ${isActiveLink('/auth/me') ? styles.active : ""}`}
-          >
-            Profile
-          </Link>
-        )}
+        {/* Logout Link - Always Visible */}
+        <button
+          onClick={() => {
+            localStorage.removeItem('token');
+            window.location.href = '/login';
+          }}
+          className={`${styles.navLink} ${styles.logoutBtn}`}
+        >
+          Logout
+        </button>
       </div>
     </nav>
   );

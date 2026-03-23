@@ -16,6 +16,9 @@ const UserDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [updatingTask, setUpdatingTask] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
 
   useEffect(() => {
     fetchDashboardData();
@@ -96,6 +99,23 @@ const UserDashboard = () => {
   };
 
   // Task Status Update Handler
+  // Calculate sprint remaining tasks
+  const sprintRemaining = (stats?.totalTasks || 0) - (stats?.completedTasks || 0);
+  const completionPercentage = stats?.totalTasks > 0 ? Math.round((stats?.completedTasks / stats?.totalTasks) * 100) : 0;
+
+  // Sprint timeline data
+  const sprintTimeline = [
+    { title: "Sprint Planning", date: "Oct 20", status: "completed" },
+    { title: "Mid-Sprint Review", date: "Oct 25", status: "upcoming" },
+    { title: "Sprint Retro", date: "Oct 30", status: "planned" }
+  ];
+
+  // Filter tasks based on search
+  const filteredTasks = recentTasks.filter(task => 
+    task.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    task.description?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   const handleStatusUpdate = async (taskId, newStatus) => {
     try {
       setUpdatingTask(taskId);
@@ -196,15 +216,79 @@ const UserDashboard = () => {
 
   return (
     <div className={styles.userDashboard}>
+      {/* Enhanced Header */}
       <div className={styles.dashboardHeader}>
-        <h1 className={styles.dashboardTitle}>User Dashboard</h1>
-        <p className={styles.dashboardSubtitle}>View your tasks and progress</p>
+        <div className={styles.headerLeft}>
+          <h1 className={styles.dashboardTitle}>Your Focus.</h1>
+          <p className={styles.dashboardSubtitle}>You have {sprintRemaining} tasks remaining for this sprint.</p>
+        </div>
+        <div className={styles.headerRight}>
+          {/* Search Bar */}
+          <div className={styles.searchContainer}>
+            <svg className={styles.searchIcon} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <input
+              type="text"
+              placeholder="Search tasks..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className={styles.searchInput}
+            />
+          </div>
+          
+          {/* Notifications */}
+          <button 
+            className={styles.iconButton}
+            onClick={() => setShowNotifications(!showNotifications)}
+          >
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+            </svg>
+            {showNotifications && (
+              <div className={styles.dropdown}>
+                <div className={styles.dropdownHeader}>Notifications</div>
+                <div className={styles.dropdownContent}>
+                  <p className={styles.noNotifications}>No new notifications</p>
+                </div>
+              </div>
+            )}
+          </button>
+          
+          {/* Settings */}
+          <button 
+            className={styles.iconButton}
+            onClick={() => setShowSettings(!showSettings)}
+          >
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            {showSettings && (
+              <div className={styles.dropdown}>
+                <div className={styles.dropdownHeader}>Settings</div>
+                <div className={styles.dropdownContent}>
+                  <button className={styles.dropdownItem}>Profile Settings</button>
+                  <button className={styles.dropdownItem}>Preferences</button>
+                  <button className={styles.dropdownItem}>Help & Support</button>
+                </div>
+              </div>
+            )}
+          </button>
+          
+          {/* User Profile */}
+          <button className={styles.profileButton}>
+            <div className={styles.profileAvatar}>
+              {user?.name?.charAt(0) || user?.email?.charAt(0) || 'U'}
+            </div>
+          </button>
+        </div>
       </div>
 
-      {/* Stats Cards */}
+      {/* Enhanced Stats Grid */}
       <div className={styles.statsGrid}>
         <div className={styles.statCard}>
-          <div className={`${styles.statIcon} ${styles.tasks}`}>
+          <div className={`${styles.statIcon} ${styles.totalTasks}`}>
             📋
           </div>
           <div className={styles.statContent}>
@@ -214,166 +298,188 @@ const UserDashboard = () => {
         </div>
 
         <div className={styles.statCard}>
-          <div className={`${styles.statIcon} ${styles.completed}`}>
+          <div className={`${styles.statIcon} ${styles.completedTasks}`}>
             ✅
           </div>
           <div className={styles.statContent}>
             <h3>{stats?.completedTasks || 0}</h3>
             <p>Completed Tasks</p>
+            <span className={styles.statChange}>+12%</span>
           </div>
         </div>
 
-        <div className={styles.statCard}>
-          <div className={`${styles.statIcon} ${styles.pending}`}>
-            ⏳
-          </div>
-          <div className={styles.statContent}>
-            <h3>{stats?.pendingTasks || 0}</h3>
-            <p>Pending Tasks</p>
-          </div>
-        </div>
-
-        <div className={styles.statCard}>
-          <div className={`${styles.statIcon} ${styles.inProgress}`}>
+        <div className={`${styles.statCard} ${styles.darkBlueCard}`}>
+          <div className={`${styles.statIcon} ${styles.inProgressTasks}`}>
             🔄
           </div>
           <div className={styles.statContent}>
-            <h3>{stats?.inProgressTasks || 0}</h3>
+            <h3>{String(stats?.inProgressTasks || 0).padStart(2, '0')}</h3>
             <p>In Progress</p>
           </div>
         </div>
 
         <div className={styles.statCard}>
-          <div className={`${styles.statIcon} ${styles.projects}`}>
-            📁
+          <div className={`${styles.statIcon} ${styles.pendingTasks}`}>
+            ⏳
           </div>
           <div className={styles.statContent}>
-            <h3>{stats?.activeProjects || 0}</h3>
-            <p>Active Projects</p>
-          </div>
-        </div>
-
-        <div className={styles.statCard}>
-          <div className={`${styles.statIcon} ${styles.users}`}>
-            👥
-          </div>
-          <div className={styles.statContent}>
-            <h3>{stats?.totalUsers || 0}</h3>
-            <p>Total Users</p>
+            <h3>{String(stats?.pendingTasks || 0).padStart(2, '0')}</h3>
+            <p>Pending Tasks</p>
           </div>
         </div>
       </div>
 
-      {/* Recent Tasks */}
-      <div className={styles.recentSection}>
-        <div className={styles.sectionHeader}>
-          <h2 className={styles.sectionTitle}>Recent Tasks</h2>
-          <button 
-            onClick={() => navigate('/tasks')}
-            className={styles.viewAllBtn}
-          >
-            View All Tasks
-          </button>
+      {/* Main Content Grid */}
+      <div className={styles.dashboardGrid}>
+        {/* Left Column - Assigned Tasks */}
+        <div className={styles.leftColumn}>
+          <div className={styles.section}>
+            <div className={styles.sectionHeader}>
+              <h2 className={styles.sectionTitle}>Assigned Tasks</h2>
+              <button 
+                onClick={() => navigate('/tasks')}
+                className={styles.viewAllBtn}
+              >
+                View All
+              </button>
+            </div>
+
+            {filteredTasks.length > 0 ? (
+              <div className={styles.tasksList}>
+                {filteredTasks.map((task) => (
+                  <div key={task.id} className={styles.taskItem}>
+                    <div className={styles.taskHeader}>
+                      <h3 className={styles.taskTitle}>{task.title}</h3>
+                      <span className={`${styles.taskStatus} ${getStatusColor(task.status)}`}>
+                        {task.status.replace('_', ' ')}
+                      </span>
+                    </div>
+
+                    <p className={styles.taskDescription}>
+                      {task.description || 'No description available'}
+                    </p>
+
+                    <div className={styles.taskMeta}>
+                      <span className={styles.taskDate}>
+                        {new Date(task.createdAt || task.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                      </span>
+                      <span className={styles.taskCategory}>
+                        {task.project?.name || 'GENERAL'}
+                      </span>
+                    </div>
+
+                    <div className={styles.taskActions}>
+                      <span className={`${styles.priorityBadge} ${getPriorityColor(task.priority)}`}>
+                        {task.priority}
+                      </span>
+                      
+                      {/* Status Update Buttons */}
+                      <div className={styles.statusActions}>
+                        {task.status !== 'PENDING' && (
+                          <button
+                            onClick={() => handleStatusUpdate(task.id, 'PENDING')}
+                            disabled={updatingTask === task.id}
+                            className={`${styles.statusBtn} ${styles.pendingBtn}`}
+                            title="Mark as Pending"
+                          >
+                            ⏳
+                          </button>
+                        )}
+                        
+                        {task.status !== 'IN_PROGRESS' && (
+                          <button
+                            onClick={() => handleStatusUpdate(task.id, 'IN_PROGRESS')}
+                            disabled={updatingTask === task.id}
+                            className={`${styles.statusBtn} ${styles.inProgressBtn}`}
+                            title="Mark as In Progress"
+                          >
+                            🔄
+                          </button>
+                        )}
+                        
+                        {task.status !== 'COMPLETED' && (
+                          <button
+                            onClick={() => handleStatusUpdate(task.id, 'COMPLETED')}
+                            disabled={updatingTask === task.id}
+                            className={`${styles.statusBtn} ${styles.completedBtn}`}
+                            title="Mark as Completed"
+                          >
+                            ✅
+                          </button>
+                        )}
+                        
+                        {updatingTask === task.id && (
+                          <div className={styles.updatingSpinner}></div>
+                        )}
+                      </div>
+                      
+                      <button 
+                        onClick={() => handleViewTask(task.id)}
+                        className={styles.viewTaskBtn}
+                      >
+                        View
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className={styles.emptyState}>
+                <div className={styles.emptyIcon}>
+                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                  </svg>
+                </div>
+                <h3 className={styles.emptyTitle}>No tasks found</h3>
+                <p className={styles.emptyDescription}>
+                  {searchQuery ? 'No tasks match your search' : 'You haven\'t been assigned any tasks yet'}
+                </p>
+                <button 
+                  onClick={() => navigate('/tasks')}
+                  className={styles.emptyAction}
+                >
+                  Browse Tasks
+                </button>
+              </div>
+            )}
+          </div>
         </div>
 
-        {recentTasks.length > 0 ? (
-          <div className={styles.tasksList}>
-            {recentTasks.map((task) => (
-              <div key={task.id} className={styles.taskItem}>
-                <div className={styles.taskHeader}>
-                  <h3 className={styles.taskTitle}>{task.title}</h3>
-                  <span className={`${styles.taskStatus} ${getStatusColor(task.status)}`}>
-                    {task.status.replace('_', ' ')}
-                  </span>
-                </div>
-
-                <p className={styles.taskDescription}>
-                  {task.description || 'No description available'}
-                </p>
-
-                <div className={styles.taskMeta}>
-                  <span className={styles.taskProject}>
-                    {task.project?.name || 'No Project'}
-                  </span>
-                  <span>
-                    {new Date(task.createdAt).toLocaleDateString()}
-                  </span>
-                </div>
-
-                <div className={styles.taskActions}>
-                  <span className={`${styles.priorityBadge} ${getPriorityColor(task.priority)}`}>
-                    {task.priority}
-                  </span>
-                  
-                  {/* Status Update Buttons */}
-                  <div className={styles.statusActions}>
-                    {task.status !== 'PENDING' && (
-                      <button
-                        onClick={() => handleStatusUpdate(task.id, 'PENDING')}
-                        disabled={updatingTask === task.id}
-                        className={`${styles.statusBtn} ${styles.pendingBtn}`}
-                        title="Mark as Pending"
-                      >
-                        ⏳
-                      </button>
-                    )}
-                    
-                    {task.status !== 'IN_PROGRESS' && (
-                      <button
-                        onClick={() => handleStatusUpdate(task.id, 'IN_PROGRESS')}
-                        disabled={updatingTask === task.id}
-                        className={`${styles.statusBtn} ${styles.inProgressBtn}`}
-                        title="Mark as In Progress"
-                      >
-                        🔄
-                      </button>
-                    )}
-                    
-                    {task.status !== 'COMPLETED' && (
-                      <button
-                        onClick={() => handleStatusUpdate(task.id, 'COMPLETED')}
-                        disabled={updatingTask === task.id}
-                        className={`${styles.statusBtn} ${styles.completedBtn}`}
-                        title="Mark as Completed"
-                      >
-                        ✅
-                      </button>
-                    )}
-                    
-                    {updatingTask === task.id && (
-                      <div className={styles.updatingSpinner}></div>
-                    )}
+        {/* Right Column - Sprint Timeline & Tips */}
+        <div className={styles.rightColumn}>
+          {/* Sprint Timeline */}
+          <div className={styles.section}>
+            <h2 className={styles.sectionTitle}>Sprint Timeline</h2>
+            <div className={styles.timeline}>
+              {sprintTimeline.map((item, index) => (
+                <div key={index} className={styles.timelineItem}>
+                  <div className={`${styles.timelineDot} ${styles[item.status]}`}></div>
+                  <div className={styles.timelineContent}>
+                    <h4 className={styles.timelineTitle}>{item.title}</h4>
+                    <p className={styles.timelineDate}>{item.date}</p>
+                    <span className={`${styles.timelineStatus} ${styles[item.status]}`}>
+                      {item.status.charAt(0).toUpperCase() + item.status.slice(1)}
+                    </span>
                   </div>
-                  
-                  <button 
-                    onClick={() => handleViewTask(task.id)}
-                    className={styles.viewTaskBtn}
-                  >
-                    View
-                  </button>
                 </div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className={styles.emptyState}>
-            <div className={styles.emptyIcon}>
-              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-              </svg>
+              ))}
             </div>
-            <h3 className={styles.emptyTitle}>No tasks yet</h3>
-            <p className={styles.emptyDescription}>
-              You haven't been assigned any tasks yet. Check back later!
+          </div>
+
+          {/* Power User Tips */}
+          <div className={`${styles.section} ${styles.tipsCard}`}>
+            <div className={styles.tipsHeader}>
+              <h3 className={styles.tipsTitle}>Power User Tips</h3>
+              <div className={styles.tipsIcon}>💡</div>
+            </div>
+            <p className={styles.tipsContent}>
+              Use <kbd className={styles.kbd}>CMD</kbd> + <kbd className={styles.kbd}>K</kbd> to quickly search and navigate to any task or project.
             </p>
-            <button 
-              onClick={() => navigate('/tasks')}
-              className={styles.emptyAction}
-            >
-              Browse Tasks
+            <button className={styles.tipsButton}>
+              Learn More
             </button>
           </div>
-        )}
+        </div>
       </div>
     </div>
   );

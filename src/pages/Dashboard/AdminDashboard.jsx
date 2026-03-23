@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAdminStats } from "../../hooks/useAdmin";
 import { AuthContext } from "../../context/AuthContext";
-import "./AdminDashboard.css";
+import styles from "./AdminDashboard.module.css";
 
 /**
  * AdminDashboard Component
@@ -15,6 +15,22 @@ const AdminDashboard = () => {
   const { stats, loading, error, refetch } = useAdminStats();
   const [lastUpdated, setLastUpdated] = useState(null);
   const [autoRefresh, setAutoRefresh] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
+
+  // Calculate admin-specific metrics
+  const systemHealth = stats?.systemHealth || 'Healthy';
+  const activeUsers = stats?.totalUsers || 0;
+  const systemUptime = '99.9%';
+  const dataRetention = '30 days';
+
+  // System timeline
+  const systemTimeline = [
+    { title: "System Backup", date: "Daily 2AM", status: "completed" },
+    { title: "Security Scan", date: "Oct 25", status: "upcoming" },
+    { title: "Performance Review", date: "Oct 30", status: "planned" }
+  ];
 
   // 1. Role-Based Access Control (RBAC)
   // Ensures only Admins can view this page
@@ -109,64 +125,239 @@ const AdminDashboard = () => {
   ];
 
   return (
-    <div className="admin-dashboard">
-      <header className="dashboard-header">
-        <div className="header-content">
-          <div className="header-content">
-          <div className="header-text">
-            <h1>Admin Dashboard</h1>
-            <p>Overall System Statistics & Management</p>
+    <div className={styles.adminDashboard}>
+      {/* Enhanced Header */}
+      <div className={styles.dashboardHeader}>
+        <div className={styles.headerLeft}>
+          <h1 className={styles.dashboardTitle}>Admin Dashboard</h1>
+          <p className={styles.dashboardSubtitle}>System Overview & Administrative Controls</p>
+        </div>
+        <div className={styles.headerRight}>
+          {/* Search Bar */}
+          <div className={styles.searchContainer}>
+            <svg className={styles.searchIcon} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <input
+              type="text"
+              placeholder="Search users, projects, tasks..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className={styles.searchInput}
+            />
           </div>
-          <div className="header-controls">
+          
+          {/* Notifications */}
+          <button 
+            className={styles.iconButton}
+            onClick={() => setShowNotifications(!showNotifications)}
+          >
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+            </svg>
+            {showNotifications && (
+              <div className={styles.dropdown}>
+                <div className={styles.dropdownHeader}>System Notifications</div>
+                <div className={styles.dropdownContent}>
+                  <p className={styles.noNotifications}>No system alerts</p>
+                </div>
+              </div>
+            )}
+          </button>
+          
+          {/* Settings */}
+          <button 
+            className={styles.iconButton}
+            onClick={() => setShowSettings(!showSettings)}
+          >
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            {showSettings && (
+              <div className={styles.dropdown}>
+                <div className={styles.dropdownHeader}>Admin Settings</div>
+                <div className={styles.dropdownContent}>
+                  <button className={styles.dropdownItem}>System Configuration</button>
+                  <button className={styles.dropdownItem}>User Management</button>
+                  <button className={styles.dropdownItem}>Backup & Restore</button>
+                  <button className={styles.dropdownItem}>Security Settings</button>
+                </div>
+              </div>
+            )}
+          </button>
+          
+          {/* Refresh Controls */}
+          <div className={styles.refreshControls}>
             <button
               onClick={handleRefresh}
               disabled={loading}
-              className={`refresh-btn ${loading ? "anim-spin" : ""}`}
+              className={`${styles.refreshBtn} ${loading ? styles.spinning : ""}`}
             >
-              {loading ? "⟳" : "🔄"} Refresh
+              {loading ? "⟳" : "🔄"}
             </button>
-            <label className="auto-refresh-toggle">
+            <label className={styles.autoRefreshToggle}>
               <input
                 type="checkbox"
                 checked={autoRefresh}
                 onChange={(e) => setAutoRefresh(e.target.checked)}
               />
-              <span>Auto-refresh (10s)</span>
+              <span>Auto</span>
             </label>
           </div>
+          
+          {/* User Profile */}
+          <button className={styles.profileButton}>
+            <div className={styles.profileAvatar}>
+              {user?.name?.charAt(0) || user?.email?.charAt(0) || 'A'}
+            </div>
+          </button>
         </div>
+      </div>
+      
+      {lastUpdated && (
+        <div className={styles.lastUpdated}>
+          Last updated: {lastUpdated.toLocaleTimeString()}
         </div>
+      )}
 
-        {lastUpdated && (
-          <div className="last-updated">
-            Last updated: {lastUpdated.toLocaleTimeString()}
+      {/* Enhanced Stats Grid */}
+      <div className={styles.statsGrid}>
+        <div className={styles.statCard} onClick={() => handleStatClick('users')}>
+          <div className={`${styles.statIcon} ${styles.totalUsers}`}>
+            👥
           </div>
-        )}
-      </header>
+          <div className={styles.statContent}>
+            <h3>{stats?.totalUsers || 0}</h3>
+            <p>Total Users</p>
+            <span className={styles.statChange}>+{activeUsers} active</span>
+          </div>
+        </div>
 
-      <div className="stats-grid">
-        {statCards.map((card) => (
-          <article
-            key={card.key}
-            className="stat-card"
-            style={{ borderTop: `4px solid ${card.color}` }}
-            onClick={() => handleStatClick(card.key)}
-          >
-            <div className="stat-icon" style={{ color: card.color }}>{card.icon}</div>
-            <div className="stat-label">{card.label}</div>
-            <div className="stat-value">{card.value.toLocaleString()}</div>
-            <div className="stat-action">→ View Details</div>
-          </article>
-        ))}
+        <div className={styles.statCard} onClick={() => handleStatClick('projects')}>
+          <div className={`${styles.statIcon} ${styles.activeProjects}`}>
+            📁
+          </div>
+          <div className={styles.statContent}>
+            <h3>{stats?.activeProjects || 0}</h3>
+            <p>Active Projects</p>
+          </div>
+        </div>
+
+        <div className={styles.statCard} onClick={() => handleStatClick('tasks')}>
+          <div className={`${styles.statIcon} ${styles.totalTasks}`}>
+            📋
+          </div>
+          <div className={styles.statContent}>
+            <h3>{stats?.totalTasks || 0}</h3>
+            <p>Total Tasks</p>
+          </div>
+        </div>
+
+        <div className={`${styles.statCard} ${styles.healthCard}`}>
+          <div className={`${styles.statIcon} ${styles.systemHealth}`}>
+            💚
+          </div>
+          <div className={styles.statContent}>
+            <h3>{systemHealth}</h3>
+            <p>System Health</p>
+            <span className={styles.statChange}>{systemUptime} uptime</span>
+          </div>
+        </div>
       </div>
 
-      <section className="system-health">
-        <h3>System Health</h3>
-        <div className={`health-status ${stats?.systemHealth?.toLowerCase() || "unknown"}`}>
-          <div className="health-indicator"></div>
-          <span>{stats?.systemHealth || "Unknown"}</span>
+      {/* Main Content Grid */}
+      <div className={styles.dashboardGrid}>
+        {/* Left Column - System Overview */}
+        <div className={styles.leftColumn}>
+          <div className={styles.section}>
+            <div className={styles.sectionHeader}>
+              <h2 className={styles.sectionTitle}>System Overview</h2>
+              <button className={styles.viewAllBtn} onClick={() => navigate('/admin/users')}>
+                View All Details
+              </button>
+            </div>
+            
+            <div className={styles.systemMetrics}>
+              <div className={styles.metricItem}>
+                <div className={styles.metricLabel}>System Uptime</div>
+                <div className={styles.metricValue}>{systemUptime}</div>
+              </div>
+              <div className={styles.metricItem}>
+                <div className={styles.metricLabel}>Data Retention</div>
+                <div className={styles.metricValue}>{dataRetention}</div>
+              </div>
+              <div className={styles.metricItem}>
+                <div className={styles.metricLabel}>Active Sessions</div>
+                <div className={styles.metricValue}>{activeUsers}</div>
+              </div>
+              <div className={styles.metricItem}>
+                <div className={styles.metricLabel}>Storage Used</div>
+                <div className={styles.metricValue}>2.4 TB</div>
+              </div>
+            </div>
+          </div>
+          
+          {/* Quick Actions */}
+          <div className={styles.section}>
+            <h2 className={styles.sectionTitle}>Quick Actions</h2>
+            <div className={styles.quickActions}>
+              <button className={styles.actionBtn} onClick={() => navigate('/admin/users')}>
+                <span className={styles.actionIcon}>👥</span>
+                <span className={styles.actionLabel}>Manage Users</span>
+              </button>
+              <button className={styles.actionBtn} onClick={() => navigate('/admin/projects')}>
+                <span className={styles.actionIcon}>📁</span>
+                <span className={styles.actionLabel}>View Projects</span>
+              </button>
+              <button className={styles.actionBtn} onClick={() => navigate('/admin/tasks')}>
+                <span className={styles.actionIcon}>📋</span>
+                <span className={styles.actionLabel}>Task Management</span>
+              </button>
+              <button className={styles.actionBtn} onClick={() => navigate('/admin/reports')}>
+                <span className={styles.actionIcon}>📊</span>
+                <span className={styles.actionLabel}>Generate Reports</span>
+              </button>
+            </div>
+          </div>
         </div>
-      </section>
+
+        {/* Right Column - System Timeline & Tips */}
+        <div className={styles.rightColumn}>
+          {/* System Timeline */}
+          <div className={styles.section}>
+            <h2 className={styles.sectionTitle}>System Timeline</h2>
+            <div className={styles.timeline}>
+              {systemTimeline.map((item, index) => (
+                <div key={index} className={styles.timelineItem}>
+                  <div className={`${styles.timelineDot} ${styles[item.status]}`}></div>
+                  <div className={styles.timelineContent}>
+                    <h4 className={styles.timelineTitle}>{item.title}</h4>
+                    <p className={styles.timelineDate}>{item.date}</p>
+                    <span className={`${styles.timelineStatus} ${styles[item.status]}`}>
+                      {item.status.charAt(0).toUpperCase() + item.status.slice(1)}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Admin Tips */}
+          <div className={`${styles.section} ${styles.tipsCard}`}>
+            <div className={styles.tipsHeader}>
+              <h3 className={styles.tipsTitle}>Admin Tips</h3>
+              <div className={styles.tipsIcon}>🛡️</div>
+            </div>
+            <p className={styles.tipsContent}>
+              Use <kbd className={styles.kbd}>CMD</kbd> + <kbd className={styles.kbd}>A</kbd> to quickly access admin controls and system settings.
+            </p>
+            <button className={styles.tipsButton}>
+              System Settings
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
